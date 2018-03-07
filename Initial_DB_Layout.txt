@@ -1,4 +1,4 @@
-User 
+user 
 	username (pk)
 	password
 	email
@@ -9,30 +9,31 @@ User
 	joinDate
 	access 
 
-Room
-	roomId (pk)
+room
+	roomID (pk)
 	roomName
-	admin (fk User)
+	admin (fk user)
 
-RoomUsers
-	roomId (fk Room)
-	username (fk User)
+roomUsers
+	roomID (fk room)
+	username (fk user)
 
-Message:
-	messageId (pk)
-	username (fk User)
-	roomId (fk Room)
+message:
+	messageID (pk)
+    message
+	username (fk user)
+	roomId (fk room)
 	timestamp 
 
-Friend:
-	friendshipId (pk)
-	username1 (fk User)
-	username2 (fk User)
+friend:
+	friendshipID (pk)
+	username1 (fk user)
+	username2 (fk user)
 
-Report:
-	reportId
-	reportee (fk User)
-	reported (fk User)
+report:
+	reportID
+	reportee (fk user)
+	reported (fk user)
 	number
 	reason 
 
