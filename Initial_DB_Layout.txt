@@ -1,0 +1,40 @@
+User 
+	username (pk)
+	password
+	email
+	firstName
+	lastName
+	DOB
+	gender
+	joinDate
+	access 
+
+Room
+	roomId (pk)
+	roomName
+	admin (fk User)
+
+RoomUsers
+	roomId (fk Room)
+	username (fk User)
+
+Message:
+	messageId (pk)
+	username (fk User)
+	roomId (fk Room)
+	timestamp 
+
+Friend:
+	friendshipId (pk)
+	username1 (fk User)
+	username2 (fk User)
+
+Report:
+	reportId
+	reportee (fk User)
+	reported (fk User)
+	number
+	reason 
+
+
+
