@@ -31,8 +31,8 @@ friend:
 	username2 (fk user)
 
 report:
-	reportID
-	reportee (fk user)
+	reportID (pk)
+	reporter (fk user)
 	reported (fk user)
 	number
 	reason 
