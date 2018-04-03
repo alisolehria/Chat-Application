@@ -21,17 +21,17 @@
 		    <meta name="description" content="Log in for chat app">
 			<meta name="author" content="Created by EJ">
 		<title>Not Discord</title>
-		<link rel="stylesheet" href="css/bootstrap.min.css"">
-		<link rel="stylesheet" type="text/css" href="css\log.css">
+		<link rel="stylesheet" href="{{url_for('static',filename='css/bootstrap.min.css') }}">
+		<link rel="stylesheet" type="text/css" href="{{url_for('static',filename='css/log.css') }}">
 	</head>
 	<body>
 		<div class="container">
 			<div class="row justify-content-center log-container">
 				<div class="col-md-4 logo-container">
-					<img src="img\logo2.png">
+					<img src="{{url_for('static',filename='img/logo2.png') }}">
 				</div>
 				<div class="col-md-4 log-box">
-			     	<form class="form-container">
+			     	<form action="/login" method = "POST" class="form-container">
 					  <div class="form-group">
 					    <label for="user">Email address / Username</label>
 					    <input type="email" class="form-control" id="user" aria-describedby="emailHelp" placeholder="Enter email">
@@ -49,7 +49,7 @@
 					  </div>
 					  <!-- Form submit commented
 					  <button type="submit" class="btn btn-primary">Submit</button> -->
-					  <a type="button" class="btn btn-primary" href="index.html">Log in</a>
+                        <button type="submit" class="btn btn-primary" >Log In</button>
 					</form>
 			    </div>
 			</div>
