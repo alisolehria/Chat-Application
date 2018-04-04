@@ -39,6 +39,7 @@
 	</head>
 	<body>
 		{% block content %}
+                <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
         <script src='https://code.jquery.com/jquery-2.2.4.min.js'></script>
 		 <div class="wrapper">
             <!-- Sidebar Holder -->
@@ -72,7 +73,7 @@
                         </a>
                     </li>
                 </ul>
-                <a type="button" class="btn btn-success logout" href="log.html">Log out</a>
+                <a type="button" class="btn btn-success logout" href="{{url_for('logout')}}">Log out</a>
             </nav>
 
             <!-- Page Content Holder -->
@@ -90,7 +91,7 @@
                                  {% if friendList %}
                                  {% for friend in friendList %}
 	            			<li class="nav-item chat-item"  >
-								  <a class="nav-link active " id="home-tab" data-toggle="tab" href="#chat1" role="tab" aria-controls="home" aria-selected="true">
+								  <a class="nav-link active " id="home-tab" data-toggle="tab" href="#chat1" role="tab" aria-controls="home" aria-selected="true" onclick="chatOpen({{friend.id}})">
 								    <div class="d-flex w-100 justify-content-between">
 								    	<img src="{{url_for('static',filename='img/logo.png')}}" class="rounded-circle chat-thumbnail">
 								      <h5 class="float-left">{{ friend.firstName }} {{ friend.lastName }}</h5>
@@ -109,73 +110,8 @@
 
             		</div>
             		<!--Actual chat, bubbles etc.-->
-            		<div class="col-lg-9 chat">
-            			<div class="chat-content tab-content content" id="nav-tabContent">
-	            			<div class="tab-pane fade show active" id="chat1" role="tabpanel" aria-labelledby="chat1-tab">
-	            				<!-- Profile section of chat-->
-								<div class="contact-profile">
-									<img src="{{url_for('static',filename='img/logo.png')}}" alt="" />
-									<p>Ali Solehria</p>
+            		<div id="mainChat" class="col-lg-9 chat">
 
-								</div>
-								<div class="messages">
-									<ul>
-										<!--class Sent == you ; Replies == other party -->
-										<li class="sent">
-											<img src="{{url_for('static',filename='img/logo.png')}}" alt="" />
-											<p>Hello</p>
-										</li>
-										<li class="replies">
-											<img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
-											<p>Where front end?</p>
-										</li>
-										<li class="replies">
-											<img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
-											<p>?</p>
-										</li>
-									</ul>
-
-								</div>
-								<!-- Input bar and send button -->
-								<div class="message-input">
-									<div class="wrap">
-									<input type="text" placeholder="Write your message..." />
-									<i class="fa fa-paperclip attachment" aria-hidden="true"></i>
-									<button class="submit"><i class="fa fa-paper-plane" aria-hidden="true"></i><img class="send-img" src="{{url_for('static',filename='img/logo.png')}}"></button>
-									</div>
-								</div>
-							</div>
-
-							<div class="tab-pane fade" id="chat2" role="tabpanel" aria-labelledby="chat2-tab">
-								<div class="contact-profile">
-									<img src="{{url_for('static',filename='img/logo.png')}}" alt="" />
-									<p>Name Here</p>
-								</div>
-								<div class="messages">
-									<ul>
-										<!--Sent == you ; Replies == other party -->
-										<li class="sent">
-											<img src="{{url_for('static',filename='img/logo.png')}}" alt="" />
-											<p>Hello?</p>
-										</li>
-										<li class="replies">
-											<img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
-											<p>Where front end??????????</p>
-										</li>
-										<li class="replies">
-											<img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
-											<p>?</p>
-										</li>
-									</ul>
-								</div>
-								<div class="message-input">
-									<div class="wrap">
-										<input type="text" placeholder="Write your message..." />
-										<button class="submit"><i class="fa fa-paper-plane" aria-hidden="true"></i><img class="send-img" src="{{url_for('static',filename='img/logo.png')}}"></button>
-									</div>
-								</div>
-							</div>
-						</div>
             		</div>
             	</div>
             </div>
@@ -207,7 +143,35 @@
 
 
  </script>
+<script>
 
+    function chatOpen(id){
+        $.ajax({
+			url: '/chatBox',
+			data: {"id":id},
+			type: 'POST',
+			success: function(response){
+          		$("#mainChat").html(response);
+
+			},
+			error: function(error){
+				console.log(error);
+			}
+		});
+    }
+</script>
+
+
+<script>
+
+//socketio script
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+    socket.on('connect', function() {
+        socket.emit('connect_message', {data: 'I\'m connected!'});
+        socket.removeAllListeners();
+    });
+
+</script>
 
 {% endblock %}
 	</body>

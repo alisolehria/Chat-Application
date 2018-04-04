@@ -41,6 +41,7 @@ class Room(db.Model):
     roomID = db.Column(db.Integer,primary_key = True)
     roomName = db.Column(db.String(80), unique=True, nullable=False)
     admin = db.Column(db.Integer,db.ForeignKey("user.id"))
+    group = db.Column(db.Boolean)
     messageRoom = db.relationship("Message", uselist=False,backref="user")
 
 #the message table

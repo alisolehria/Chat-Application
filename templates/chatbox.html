@@ -1,0 +1,53 @@
+       			<div class="chat-content tab-content content" id="nav-tabContent">
+	            			<div class="tab-pane fade show active" id="chat1" role="tabpanel" aria-labelledby="chat1-tab">
+	            				<!-- Profile section of chat-->
+								<div class="contact-profile">
+									<img src="{{url_for('static',filename='img/logo.png')}}" alt="" />
+
+									<h2>{{friend.firstName}} {{friend.lastName}} </h2>
+
+								</div>
+								<div class="messages">
+									<ul id = "messageArea">
+                                        {% for message in messages %}
+                                            {% if message.username == user.id %}
+                                                <li class = "sent"> <p>{{message.message}}</p></li>
+                                            {% else %}
+                                                <li class = "replies"> <p>{{message.message}}</p></li>
+                                            {% endif %}
+                                        {% endfor %}
+									</ul>
+
+								</div>
+								<!-- Input bar and send button -->
+								<div class="message-input">
+									<div class="form-group">
+									<input type="text" class = "form-control input-lg" placeholder="Write your message..." id="message" />
+									<i class="fa fa-paperclip attachment" aria-hidden="true"></i>
+									<button class="form-control submit" onclick="send_message()">Send</button>
+									</div>
+								</div>
+							</div>
+
+
+						</div>
+<script>
+    socket.removeAllListeners();
+    console.log('{{friend.id}}');
+    socket.emit('join', {room: '{{room.roomID}}'});
+    socket.on('message_received', function(msg) {
+        console.log(msg.user);
+        if (msg.user != '{{user.id}}' && msg.user == '{{friend.id}}'){
+                $('#messageArea').append('<li class = "replies"> <p>'+msg.data+'</p></li>');
+        }
+    });
+
+    function send_message() {
+        var message = document.getElementById("message").value;
+        console.log("Message is :"+message)
+        socket.emit('message_client', {"message": message,"room": '{{room.roomID}}',"user":'{{user.id}}'});
+        document.getElementById("message").value = "";
+        $('#messageArea').append('<li class = "sent"> <p>'+message+'</p></li>' );
+    }
+
+</script>

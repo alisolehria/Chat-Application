@@ -1,13 +1,14 @@
 from flask import Flask, render_template, redirect, url_for, request, jsonify
-from flask_socketio import SocketIO,emit
+from flask_socketio import SocketIO,emit,join_room,leave_room
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField
 from wtforms.validators import InputRequired, Email, Length
 from flask_sqlalchemy  import SQLAlchemy
+from sqlalchemy.sql.expression import func
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
-
+import datetime
 app = Flask(__name__)
 socketio = SocketIO(app)
 app.config['SECRET_KEY'] = 'Thisissupposedtobesecret!'
@@ -17,6 +18,8 @@ db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
+
+currentRoom = None
 
 
 RoomUsers = db.Table("roomUsers", db.Column("roomId",db.Integer,db.ForeignKey("room.roomID"), primary_key=True),
@@ -51,6 +54,7 @@ class Room(db.Model):
     roomID = db.Column(db.Integer,primary_key = True)
     roomName = db.Column(db.String(80), unique=True, nullable=False)
     admin = db.Column(db.Integer,db.ForeignKey("user.id"))
+    group = db.Column(db.Boolean)
     messageRoom = db.relationship("Message")
 
 #the message table
@@ -124,7 +128,16 @@ def signup():
 @app.route('/chat')
 @login_required
 def chat():
-
+#    for friend in current_user.friends:
+#        #now get their room
+#        allRooms = Room.query.filter_by(group = False).all()
+#        current_room = None
+#        for room in allRooms:
+#            if room in current_user.roomUsers and room in friend.roomUsers:
+#                current_room = room
+#        lastMessage = db.session.query(func.max(Message.messageID)).filter_by(roomID=current_room.roomID).first()
+#        lastMessage = Message.query.filter_by(messageID = lastMessage[0]).first()
+#        print(lastMessage)
     return render_template('chat.html', name=current_user.username, friendList = current_user.friends)
 
 @app.route('/logout')
@@ -154,12 +167,68 @@ def addFriend():
     new_friend = User.query.filter_by(id = userid).first()
     print(current_user.friends)
     current_user.friends.append(new_friend)
+    new_friend.friends.append(current_user)
+    #once added as friend create their personal room
+    roomName = current_user.lastName + "/" + new_friend.lastName
+    new_room = Room(roomName=roomName,group = False)
+    current_user.roomUsers.append(new_room)
+    new_friend.roomUsers.append(new_room)
     db.session.commit()
     return ""
 
+@app.route('/chatBox', methods=['GET', 'POST'])
+@login_required
+def chatBox():
+    friendId = request.form["id"]
+    friend = User.query.filter_by(id = friendId).first()
+
+
+    #now get their room
+    allRooms = Room.query.filter_by(group = False).all()
+    current_room = None
+    for room in allRooms:
+        if room in current_user.roomUsers and room in friend.roomUsers:
+            current_room = room
+
+    #retrive previous messages of this room
+    messages = Message.query.filter_by(roomID=current_room.roomID).all()
+    print(messages)
+    return render_template("chatbox.html", friend = friend,room=current_room,user=current_user,messages=messages)
+
+
+
+#socketio functions
+@socketio.on('connect')
+@login_required
+def client_connect():
+    print("Client Conncected")
+    emit('server_response',{"data":"Connected to Server"})
+
+@socketio.on('join')
+@login_required
+def join(message):
+    join_room(message['room'])
+    print("Entered: "+message['room'])
+    return ""
+
+@socketio.on('message_client')
+@login_required
+def handle_client_message(json):
+    message = json['message']
+    print("Message for room: "+json['room'])
+
+    message_user =json['user']
+    room=json['room']
+
+    currentTime = datetime.datetime.now()
+    new_message = Message(message=message,username=message_user,roomID=room,timestamp=currentTime)
+    db.session.add(new_message)
+    db.session.commit()
+    emit('message_received',{"data":message,"user":current_user.id},room=room)
 
 if __name__ == '__main__':
     app.jinja_env.auto_reload = True
     app.config['TEMPLATES_AUTO_RELOAD'] = True
-    socketio.run(app, debug=True)
+    app.config['SESSION_PERMANENT'] = False
+    socketio.run(app, debug=True, host='0.0.0.0')
     #app.run(debug=True)
