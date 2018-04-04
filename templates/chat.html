@@ -87,6 +87,7 @@
 
             			<ul class="nav nav-tabs list-group " id="nav-tab" role="tablist">
                              <div id = "mainHolder">
+                                 {% if friendList %}
                                  {% for friend in friendList %}
 	            			<li class="nav-item chat-item"  >
 								  <a class="nav-link active " id="home-tab" data-toggle="tab" href="#chat1" role="tab" aria-controls="home" aria-selected="true">
@@ -100,7 +101,9 @@
 								  </a>
 							  </li>
                                  {% endfor %}
-
+                                {% else %}
+                                 <h5>No Friends found! Add Friends.</h5>
+                                 {% endif %}
 </div>
 						</ul>
 
