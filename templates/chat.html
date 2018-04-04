@@ -27,33 +27,48 @@
 	<link rel="stylesheet" href="{{url_for('static',filename='css/bootstrap.min.css') }}">
 		<link rel="stylesheet" type="text/css" href="{{url_for('static',filename='css/index.css') }}">
 		{% endblock %}
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script src='https://code.jquery.com/jquery-2.2.4.min.js'></script>
+
+
 	</head>
 	<body>
 		{% block content %}
+        <script src='https://code.jquery.com/jquery-2.2.4.min.js'></script>
 		 <div class="wrapper">
             <!-- Sidebar Holder -->
             <nav id="sidebar">
                 <div class="sidebar-header">
-                    <img src="img\goat.jpg" class="rounded-circle img-thumbnail profile-picture">
+                    <img src="{{url_for('static',filename='img/logo.png')}}" class="rounded-circle img-thumbnail profile-picture">
+                    <br>
                     <h5 class="text-center current-user">{{ name }}</h5>
                 </div>
                 <ul class="list-unstyled components">
+
+                    <li>     <div class="container">
+                            <form id="myfriends" >
+                         <i class="glyphicon glyphicon-briefcase"></i>
+                             <button type = "submit" class = "btn btn-link"> Friends</button>
+                        </form>
+                         </div>
+                    </li>
                     <li>
+                        <div class="container">
+                        <form id="friends" >
+                            <i class="glyphicon glyphicon-briefcase"></i>
+                            <button type = "submit" class = "btn btn-link"> Add Friends</button>
+                        </form>
+                            </div>
+                    </li>
+                          <li>
                         <a href="#">
                             <i class="glyphicon glyphicon-briefcase"></i>
                             Profile
-                        </a>
-                    </li>
-                    <li>
-                        <a href="servers.html">
-                            <i class="glyphicon glyphicon-briefcase"></i>
-                            Servers
-                        </a>
-                    </li>
-                    <li>
-                        <a href="index.html">
-                            <i class="glyphicon glyphicon-briefcase"></i>
-                            Friends
                         </a>
                     </li>
                 </ul>
@@ -69,34 +84,26 @@
             				 <input class="form-control chat-search" type="search" placeholder="Search" aria-label="Search">
 
             			</div>
+
             			<ul class="nav nav-tabs list-group " id="nav-tab" role="tablist">
+                             <div id = "mainHolder">
+                                 {% for friend in friendList %}
 	            			<li class="nav-item chat-item"  >
 								  <a class="nav-link active " id="home-tab" data-toggle="tab" href="#chat1" role="tab" aria-controls="home" aria-selected="true">
 								    <div class="d-flex w-100 justify-content-between">
-								    	<img src="img\1473379035713.png" class="rounded-circle chat-thumbnail">
-								      <h5 class="float-left">Ali Solehria</h5>
+								    	<img src="{{url_for('static',filename='img/logo.png')}}" class="rounded-circle chat-thumbnail">
+								      <h5 class="float-left">{{ friend.firstName }} {{ friend.lastName }}</h5>
 								    </div>
 								    <p class="preview">?</p>
 								    <small>3 days ago</small>
 								    <span class="badge badge-primary badge-pill float-right">1</span>
 								  </a>
 							  </li>
+                                 {% endfor %}
 
-							  <li class="nav-item" >
-								  <a  class="list-group-item chat-item  nav-link" id="chat-1-tab" data-toggle="tab" href="#chat2" role="tab" aria-controls="chat-2" aria-selected="true">
-								    <div class="d-flex w-100 justify-content-between">
-								    	<img src="img\1473379035713.png" class="img-thumbnail chat-thumbnail">
-								      <h5 class="float-left">Name Here</h5>
-								    </div>
-
-								    <p class="preview">Donec id elit non mi porta gravida at eget metus.....</p>
-								    <small>5 days ago</small>
-								    <!-- Small pill for "unread" messages-->
-								    <span class="badge badge-primary badge-pill float-right">1</span>
-								  </a>
-							  </li>
-
+</div>
 						</ul>
+
             		</div>
             		<!--Actual chat, bubbles etc.-->
             		<div class="col-lg-9 chat">
@@ -104,7 +111,7 @@
 	            			<div class="tab-pane fade show active" id="chat1" role="tabpanel" aria-labelledby="chat1-tab">
 	            				<!-- Profile section of chat-->
 								<div class="contact-profile">
-									<img src="img\goat.jpg" alt="" />
+									<img src="{{url_for('static',filename='img/logo.png')}}" alt="" />
 									<p>Ali Solehria</p>
 
 								</div>
@@ -112,7 +119,7 @@
 									<ul>
 										<!--class Sent == you ; Replies == other party -->
 										<li class="sent">
-											<img src="img\goat.jpg" alt="" />
+											<img src="{{url_for('static',filename='img/logo.png')}}" alt="" />
 											<p>Hello</p>
 										</li>
 										<li class="replies">
@@ -131,21 +138,21 @@
 									<div class="wrap">
 									<input type="text" placeholder="Write your message..." />
 									<i class="fa fa-paperclip attachment" aria-hidden="true"></i>
-									<button class="submit"><i class="fa fa-paper-plane" aria-hidden="true"></i><img class="send-img" src="svg\pencil.svg"></button>
+									<button class="submit"><i class="fa fa-paper-plane" aria-hidden="true"></i><img class="send-img" src="{{url_for('static',filename='img/logo.png')}}"></button>
 									</div>
 								</div>
 							</div>
 
 							<div class="tab-pane fade" id="chat2" role="tabpanel" aria-labelledby="chat2-tab">
 								<div class="contact-profile">
-									<img src="img\goat.jpg" alt="" />
+									<img src="{{url_for('static',filename='img/logo.png')}}" alt="" />
 									<p>Name Here</p>
 								</div>
 								<div class="messages">
 									<ul>
 										<!--Sent == you ; Replies == other party -->
 										<li class="sent">
-											<img src="img\goat.jpg" alt="" />
+											<img src="{{url_for('static',filename='img/logo.png')}}" alt="" />
 											<p>Hello?</p>
 										</li>
 										<li class="replies">
@@ -161,7 +168,7 @@
 								<div class="message-input">
 									<div class="wrap">
 										<input type="text" placeholder="Write your message..." />
-										<button class="submit"><i class="fa fa-paper-plane" aria-hidden="true"></i><img class="send-img" src="svg\pencil.svg"></button>
+										<button class="submit"><i class="fa fa-paper-plane" aria-hidden="true"></i><img class="send-img" src="{{url_for('static',filename='img/logo.png')}}"></button>
 									</div>
 								</div>
 							</div>
@@ -170,13 +177,37 @@
             	</div>
             </div>
       </div>
+
+
+
+
+     <script>
+
+	$(function(){
+	$('#friends').submit(function(){
+		$.ajax({
+			url: '/getUsers',
+			data: "{{name}}",
+			type: 'POST',
+			success: function(response){
+          		$("#mainHolder").html(response);
+
+			},
+			error: function(error){
+				console.log(error);
+			}
+		});
+		return false;
+	});
+});
+
+
+
+ </script>
+
+
 {% endblock %}
 	</body>
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
-<script src='https://code.jquery.com/jquery-2.2.4.min.js'></script>
-<script src="js/chat.js"></script>
 
 </html>
