@@ -20,7 +20,6 @@ db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
-
 currentRoom = None
 
 
@@ -48,6 +47,8 @@ class User(UserMixin, db.Model):
     roomUsers = db.relationship("Room", secondary=RoomUsers)
     message = db.relationship("Message", uselist=False,backref="user")
     friends = db.relationship("User",secondary=Friend, primaryjoin=(Friend.c.username1 == id),secondaryjoin=(Friend.c.username2 == id))
+    lastMessage = ""
+    timestamp = ""
 #    reporter = db.relationship("Report",  primaryjoin=(Report.c.reporter == id),secondaryjoin=(Report.c.reported == id), uselist=False,backref="user")
 #    reported = db.relationship("Report",primaryjoin=(Report.c.reported == id),secondaryjoin=(Report.c.reporter == id),  uselist=False,backref="user")
 
@@ -134,17 +135,29 @@ def signup():
 @login_required
 def chat():
 
+    return render_template('chat.html')
+
+
+
+@app.route('/friendList',methods=['GET','POST'])
+@login_required
+def friendList():
+    print("here")
     for friend in current_user.friends:
         #now get their room
         allRooms = Room.query.filter_by(group = False).all()
         current_room = None
+        print(friend.lastName)
         for room in allRooms:
             if room in current_user.roomUsers and room in friend.roomUsers:
                 current_room = room
                 lastMessage = Message.query.filter_by(roomID=current_room.roomID).order_by(desc(Message.messageID)).first()
-                print(lastMessage)
+                friend.lastMessage = lastMessage.message
+                friend.timestamp = lastMessage.timestamp
 
-        return render_template('chat.html', name=current_user.username, friendList = current_user.friends)
+
+
+    return render_template('friendList.html', name=current_user.username, friendList = current_user.friends)
 
 @app.route('/logout')
 @login_required
@@ -245,6 +258,7 @@ def myGroups():
 def status():
     friend = request.form['id']
     access = User.query.filter_by(id=friend).first()
+    #print(access.lastName)
     response = {}
     response['access'] = access.access
     return jsonify(response)

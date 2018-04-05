@@ -98,23 +98,7 @@
 
             			<ul class="nav nav-tabs list-group " id="nav-tab" role="tablist">
                              <div id = "mainHolder">
-                                 {% if friendList %}
-                                 {% for friend in friendList %}
-	            			<li class="nav-item chat-item"  >
-								  <a class="nav-link active " id="home-tab" data-toggle="tab" href="#chat1" role="tab" aria-controls="home" aria-selected="true" onclick="chatOpen({{friend.id}})">
-								    <div class="d-flex w-100 justify-content-between">
-								    	<img src="{{url_for('static',filename='img/logo.png')}}" class="rounded-circle chat-thumbnail">
-								      <h5 class="float-left">{{ friend.firstName }} {{ friend.lastName }}</h5>
-								    </div>
-								    <p class="preview">?</p>
-								    <small>3 days ago</small>
-								    <span class="badge badge-primary badge-pill float-right">1</span>
-								  </a>
-							  </li>
-                                 {% endfor %}
-                                {% else %}
-                                 <h5>No Friends found! Add Friends.</h5>
-                                 {% endif %}
+
 </div>
 						</ul>
 
@@ -243,7 +227,28 @@
 
 </script>
 
+<script>
+ //clearInterval(interval);
 
+    setInterval(function()
+    {
+       $.ajax({
+			url: '/friendList',
+			type: 'POST',
+			success: function(response){
+                $("#mainHolder").html(response);
+
+			},
+			error: function(error){
+
+				console.log(error);
+			}
+		});
+    }, 1000);//time in milliseconds
+
+
+
+</script>
 
 
 

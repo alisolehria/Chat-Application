@@ -50,7 +50,9 @@
         $('#messageArea').append('<li class = "sent"> <p>'+message+'</p></li>' );
     }
 
-    setInterval(function()
+    clearInterval(interval);
+
+    var interval = setInterval(function()
     {
        $.ajax({
 			url: '/status',
