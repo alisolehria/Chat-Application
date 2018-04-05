@@ -6,6 +6,7 @@ from wtforms import StringField, PasswordField, BooleanField
 from wtforms.validators import InputRequired, Email, Length
 from flask_sqlalchemy  import SQLAlchemy
 from sqlalchemy.sql.expression import func
+from sqlalchemy import desc
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 import datetime
@@ -132,17 +133,18 @@ def signup():
 @app.route('/chat')
 @login_required
 def chat():
-#    for friend in current_user.friends:
-#        #now get their room
-#        allRooms = Room.query.filter_by(group = False).all()
-#        current_room = None
-#        for room in allRooms:
-#            if room in current_user.roomUsers and room in friend.roomUsers:
-#                current_room = room
-#        lastMessage = db.session.query(func.max(Message.messageID)).filter_by(roomID=current_room.roomID).first()
-#        lastMessage = Message.query.filter_by(messageID = lastMessage[0]).first()
-#        print(lastMessage)
-    return render_template('chat.html', name=current_user.username, friendList = current_user.friends)
+
+    for friend in current_user.friends:
+        #now get their room
+        allRooms = Room.query.filter_by(group = False).all()
+        current_room = None
+        for room in allRooms:
+            if room in current_user.roomUsers and room in friend.roomUsers:
+                current_room = room
+                lastMessage = Message.query.filter_by(roomID=current_room.roomID).order_by(desc(Message.messageID)).first()
+                print(lastMessage)
+
+        return render_template('chat.html', name=current_user.username, friendList = current_user.friends)
 
 @app.route('/logout')
 @login_required
