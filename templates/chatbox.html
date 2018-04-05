@@ -5,7 +5,7 @@
 									<img src="{{url_for('static',filename='img/logo.png')}}" alt="" />
 
 									<h2>{{friend.firstName}} {{friend.lastName}} </h2>
-
+                                    <div id = "status"><p>{{friend.access}}</p></div>
 								</div>
 								<div class="messages">
 									<ul id = "messageArea">
@@ -49,5 +49,22 @@
         document.getElementById("message").value = "";
         $('#messageArea').append('<li class = "sent"> <p>'+message+'</p></li>' );
     }
+
+    setInterval(function()
+    {
+       $.ajax({
+			url: '/status',
+			data: {"id":'{{friend.id}}'},
+			type: 'POST',
+			success: function(response){
+                document.getElementById("status").innerHTML = "<p>"+response['access']+"</p>";
+
+			},
+			error: function(error){
+
+				console.log(error);
+			}
+		});
+    }, 5000);//time in milliseconds
 
 </script>

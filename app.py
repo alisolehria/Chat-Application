@@ -42,7 +42,7 @@ class User(UserMixin, db.Model):
     DOB = db.Column(db.DateTime)
     gender = db.Column(db.Boolean)
     joinDate = db.Column(db.DateTime)
-    access = db.Column(db.DateTime)
+    access = db.Column(db.String(80))
     room = db.relationship("Room", uselist=False,backref="user")
     roomUsers = db.relationship("Room", secondary=RoomUsers)
     message = db.relationship("Message", uselist=False,backref="user")
@@ -147,6 +147,9 @@ def chat():
 @app.route('/logout')
 @login_required
 def logout():
+    lastAccess = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+    current_user.access = "Last Online: "+lastAccess
+    db.session.commit()
     logout_user()
     return redirect(url_for('index'))
 
@@ -235,6 +238,14 @@ def myGroups():
     return render_template("myGroups.html",groups = myGroups)
 
 
+@app.route('/status',methods=['GET','POST'])
+@login_required
+def status():
+    friend = request.form['id']
+    access = User.query.filter_by(id=friend).first()
+    response = {}
+    response['access'] = access.access
+    return jsonify(response)
 
 @app.route('/groupChat', methods=['GET', 'POST'])
 @login_required
@@ -259,6 +270,8 @@ def groupChat():
 @login_required
 def client_connect():
     print("Client Conncected")
+    current_user.access = "Online"
+    db.session.commit()
     emit('server_response',{"data":"Connected to Server"})
 
 @socketio.on('join')
@@ -282,6 +295,14 @@ def handle_client_message(json):
     db.session.add(new_message)
     db.session.commit()
     emit('message_received',{"data":message,"user":current_user.id,"sender":sender.username},room=room)
+
+
+@socketio.on('disconnect')
+def test_disconnect():
+    lastAccess = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+    current_user.access = "Last Online: "+lastAccess
+    db.session.commit()
+    print('Client disconnected')
 
 if __name__ == '__main__':
     app.jinja_env.auto_reload = True
