@@ -46,7 +46,7 @@
             <!-- Sidebar Holder -->
             <nav id="sidebar">
                 <div class="sidebar-header">
-                    <img src="{{url_for('static',filename='img/logo.png')}}" class="rounded-circle img-thumbnail profile-picture">
+                    <img src="{{ user.avatar(128) }}">
                     <br>
                     <h5 class="text-center current-user">{{ name }}</h5>
                 </div>

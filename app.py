@@ -10,6 +10,9 @@ from sqlalchemy import desc
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 import datetime
+from flask_wtf.file import FileField
+from hashlib import md5
+
 
 app = Flask(__name__)
 socketio = SocketIO(app)
@@ -49,6 +52,12 @@ class User(UserMixin, db.Model):
     friends = db.relationship("User",secondary=Friend, primaryjoin=(Friend.c.username1 == id),secondaryjoin=(Friend.c.username2 == id))
     lastMessage = ""
     timestamp = ""
+
+    def avatar(self, size):
+        digest = md5(self.email.lower().encode('utf-8')).hexdigest()
+        return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(digest, size)
+
+    #'https://www.gravatar.com/avatar/97d6961ceb3d48624c4ea08ef2733d85'
 #    reporter = db.relationship("Report",  primaryjoin=(Report.c.reporter == id),secondaryjoin=(Report.c.reported == id), uselist=False,backref="user")
 #    reported = db.relationship("Report",primaryjoin=(Report.c.reported == id),secondaryjoin=(Report.c.reporter == id),  uselist=False,backref="user")
 
@@ -135,7 +144,11 @@ def signup():
 @login_required
 def chat():
 
+<<<<<<< HEAD
     return render_template('chat.html',user=curreent_user,name=current_user.username)
+=======
+    return render_template('chat.html', user = current_user)
+>>>>>>> origin/master
 
 
 
