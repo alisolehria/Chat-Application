@@ -6,7 +6,7 @@
 								    	<img src="{{url_for('static',filename='img/logo.png')}}" class="rounded-circle chat-thumbnail">
 								      <h5 class="float-left">{{ friend.firstName }} {{ friend.lastName }}</h5>
 								    </div>
-								    <p class="preview">{{friend.lastMessage}}</p>
+								    <p class="preview">{{friend.lastMessage.message}}</p>
 								    <small>{{friend.timestamp}}</small>
 
 								  </a>

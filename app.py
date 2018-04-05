@@ -135,29 +135,31 @@ def signup():
 @login_required
 def chat():
 
-    return render_template('chat.html')
+    return render_template('chat.html',user=curreent_user,name=current_user.username)
 
 
 
 @app.route('/friendList',methods=['GET','POST'])
 @login_required
 def friendList():
-    print("here")
+    #print("here")
     for friend in current_user.friends:
         #now get their room
         allRooms = Room.query.filter_by(group = False).all()
         current_room = None
-        print(friend.lastName)
+        #print(friend.lastName)
         for room in allRooms:
             if room in current_user.roomUsers and room in friend.roomUsers:
                 current_room = room
                 lastMessage = Message.query.filter_by(roomID=current_room.roomID).order_by(desc(Message.messageID)).first()
-                friend.lastMessage = lastMessage.message
+                friend.lastMessage = lastMessage
                 friend.timestamp = lastMessage.timestamp
 
 
-
-    return render_template('friendList.html', name=current_user.username, friendList = current_user.friends)
+        #sortedList = current_user.friends[0].lastMessage.messageID
+    sortedList = sorted(current_user.friends, key=lambda friend: friend.lastMessage.messageID,reverse = True)
+    print(sortedList)
+    return render_template('friendList.html', name=current_user.username, friendList = sortedList)
 
 @app.route('/logout')
 @login_required

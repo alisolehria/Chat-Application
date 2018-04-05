@@ -492,4 +492,7 @@ a.article, a.article:hover {
 
 .messages {
     overflow: scroll;
+    background: black;
 }
+
+
