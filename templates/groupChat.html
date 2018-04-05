@@ -4,28 +4,32 @@
 								<div class="contact-profile">
 									<img src="{{url_for('static',filename='img/logo.png')}}" alt="" />
 
-									<h2>{{friend.firstName}} {{friend.lastName}} </h2>
+									<h2>{{room.roomName}}</h2>
 
 								</div>
 								<div class="messages">
 									<ul id = "messageArea">
                                         {% for message in messages %}
                                             {% if message.username == user.id %}
-                                                <li class = "sent"> <p>{{message.message}}</p></li>
+                                                <li class = "sent">
+
+                                                    <p>{{message.userInfo.username}}: <br>
+
+                                                        {{message.message}}</p></li>
                                             {% else %}
-                                                <li class = "replies"> <p>{{message.message}}</p></li>
+                                                <li class = "replies"> <p>{{message.userInfo.username}}: <br> {{message.message}}</p></li>
                                             {% endif %}
                                         {% endfor %}
 									</ul>
-	<div class="form-group">
+
+									<div class="form-group">
 									<input type="text" class = "form-control input-lg" placeholder="Write your message..." id="message" />
 									<i class="fa fa-paperclip attachment" aria-hidden="true"></i>
-									<button class="form-control submit" onclick="send_message()">Send</button>
+									<button class="form-control submit" onclick="send_groupmessage()">Send</button>
 									</div>
+
 								</div>
 								<!-- Input bar and send button -->
-
-
 
 							</div>
 
@@ -33,21 +37,20 @@
 						</div>
 <script>
     socket.removeAllListeners();
-    console.log('{{friend.id}}');
     socket.emit('join', {room: '{{room.roomID}}'});
     socket.on('message_received', function(msg) {
         console.log(msg.user);
-        if (msg.user != '{{user.id}}' && msg.user == '{{friend.id}}'){
-                $('#messageArea').append('<li class = "replies"> <p>'+msg.data+'</p></li>');
+        if (msg.user != '{{user.id}}'){
+                $('#messageArea').append('<li class = "replies"> <p>'+msg.sender+": <br>"+msg.data+'</p></li>');
         }
     });
 
-    function send_message() {
+    function send_groupmessage() {
         var message = document.getElementById("message").value;
         console.log("Message is :"+message)
         socket.emit('message_client', {"message": message,"room": '{{room.roomID}}',"user":'{{user.id}}'});
         document.getElementById("message").value = "";
-        $('#messageArea').append('<li class = "sent"> <p>'+message+'</p></li>' );
+        $('#messageArea').append('<li class = "sent"> <p> {{name}}: <br>'+message+'</p></li>' );
     }
 
 </script>

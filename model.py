@@ -6,9 +6,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:pass123@localhost/netapps'
 db = SQLAlchemy(app)
 
 #this is the middle table for users and rooms
-
-
-
 RoomUsers = db.Table("roomUsers", db.Column("roomId",db.Integer,db.ForeignKey("room.roomID"), primary_key=True),
 db.Column("userID",db.Integer,db.ForeignKey("user.id"), primary_key=True))
 

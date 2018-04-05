@@ -489,3 +489,7 @@ a.article, a.article:hover {
  .content .message-input .wrap button:focus {
   outline: none;
 }
+
+.messages {
+    overflow: scroll;
+}

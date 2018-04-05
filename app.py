@@ -9,6 +9,7 @@ from sqlalchemy.sql.expression import func
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 import datetime
+
 app = Flask(__name__)
 socketio = SocketIO(app)
 app.config['SECRET_KEY'] = 'Thisissupposedtobesecret!'
@@ -64,6 +65,7 @@ class Message(db.Model):
     username = db.Column(db.Integer,db.ForeignKey("user.id"))
     roomID = db.Column(db.Integer,db.ForeignKey("room.roomID"))
     timestamp = db.Column(db.DateTime,nullable=False)
+    userInfo = ""
 #
 #class Report(db.Model):
 #    reoportID = db.Column(db.Integer,primary_key = True)
@@ -89,6 +91,8 @@ class RegisterForm(FlaskForm):
     username = StringField('Username', validators=[InputRequired(), Length(min=4, max=15)])
     password = PasswordField('Password', validators=[InputRequired(), Length(min=8, max=80)])
 
+class GroupForm(FlaskForm):
+    roomName = StringField('Group Name', validators=[InputRequired(), Length(min=4, max=15)])
 
 
 @app.route('/')
@@ -192,9 +196,62 @@ def chatBox():
 
     #retrive previous messages of this room
     messages = Message.query.filter_by(roomID=current_room.roomID).all()
+
     print(messages)
     return render_template("chatbox.html", friend = friend,room=current_room,user=current_user,messages=messages)
 
+
+@app.route('/browseGroups', methods=['GET', 'POST'])
+@login_required
+def browseGroups():
+    groups = Room.query.filter_by(group=True).all()
+    for group in groups:
+        if group in current_user.roomUsers:
+            groups.remove(group)
+    return render_template("browseGroups.html",groups = groups)
+
+
+@app.route('/createGroup', methods=['GET', 'POST'])
+@login_required
+def createGroup():
+    form = GroupForm()
+    if form.validate_on_submit():
+        roomName = form.roomName.data
+        new_room = Room(roomName=roomName,admin = current_user.id, group = True)
+        current_user.roomUsers.append(new_room)
+        db.session.commit()
+
+    return render_template("createGroup.html",form=form)
+
+
+@app.route('/myGroups', methods=['GET', 'POST'])
+@login_required
+def myGroups():
+    groups = Room.query.filter_by(group=True).all()
+    myGroups = []
+    for group in groups:
+        if group in current_user.roomUsers:
+            myGroups.append(group)
+    return render_template("myGroups.html",groups = myGroups)
+
+
+
+@app.route('/groupChat', methods=['GET', 'POST'])
+@login_required
+def groupChat():
+
+    roomId = request.form["id"]
+    #now get their room
+    print(roomId)
+    current_room = Room.query.filter_by(roomID = roomId).first()
+    print(current_room)
+    #retrive previous messages of this room
+    messages = Message.query.filter_by(roomID=current_room.roomID).all()
+    for message in messages:
+        userInfo = User.query.filter_by(id=message.username).first()
+        message.userInfo = userInfo
+    print(messages)
+    return render_template("groupChat.html",room=current_room,user=current_user,messages=messages,name=current_user.username)
 
 
 #socketio functions
@@ -219,12 +276,12 @@ def handle_client_message(json):
 
     message_user =json['user']
     room=json['room']
-
+    sender = User.query.filter_by(id=message_user).first()
     currentTime = datetime.datetime.now()
     new_message = Message(message=message,username=message_user,roomID=room,timestamp=currentTime)
     db.session.add(new_message)
     db.session.commit()
-    emit('message_received',{"data":message,"user":current_user.id},room=room)
+    emit('message_received',{"data":message,"user":current_user.id,"sender":sender.username},room=room)
 
 if __name__ == '__main__':
     app.jinja_env.auto_reload = True
