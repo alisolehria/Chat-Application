@@ -26,6 +26,7 @@ class User(db.Model):
     gender = db.Column(db.Boolean)
     joinDate = db.Column(db.DateTime)
     access = db.Column(db.String(80))
+    image = db.Coloumn(db.String(200))
     room = db.relationship("Room", uselist=False,backref="user")
     roomUsers = db.relationship("Room", secondary=RoomUsers)
     message = db.relationship("Message", uselist=False,backref="user")
