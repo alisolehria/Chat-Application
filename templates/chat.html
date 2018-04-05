@@ -230,7 +230,7 @@
 <script>
  //clearInterval(interval);
 
-    setInterval(function()
+    window.onload = function()
     {
        $.ajax({
 			url: '/friendList',
@@ -244,7 +244,7 @@
 				console.log(error);
 			}
 		});
-    }, 1000);//time in milliseconds
+    }//time in milliseconds
 
 
 
