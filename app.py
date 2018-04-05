@@ -143,7 +143,7 @@ def signup():
 @app.route('/chat')
 @login_required
 def chat():
-    return render_template('chat.html',user=curreent_user,name=current_user.username)
+    return render_template('chat.html',user=current_user,name=current_user.username)
 
 
 @app.route('/friendList',methods=['GET','POST'])
