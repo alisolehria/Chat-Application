@@ -8,3 +8,4 @@ wtforms
 gunicorn
 mysqlclient
 pymysql
+gevent
