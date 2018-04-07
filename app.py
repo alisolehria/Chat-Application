@@ -18,13 +18,13 @@ app = Flask(__name__)
 socketio = SocketIO(app)
 app.config['SECRET_KEY'] = 'Thisissupposedtobesecret!'
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:pass123@localhost/netapps'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://aliaschat_1612:XkQR1jlKThj36EpTSGzs@82aff7f1-1efb-4367-b5ed-21bb91efce66.aliaschat-1612.mysql.dbs.scalingo.com:31454/aliaschat_1612'
-#SQLALCHEMY_DATABASE_URI = "mysql+pymysql://{username}:{password}@{hostname}/{databasename}".format(
-#    username="sql12231151",
-#    password="iNNxRJnZLM",
-#    hostname="sql12.freemysqlhosting.net",
-#    databasename="sql12231151",
-#)
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://aliaschat_1612:XkQR1jlKThj36EpTSGzs@82aff7f1-1efb-4367-b5ed-21bb91efce66.aliaschat-1612.mysql.dbs.scalingo.com:31454/aliaschat_1612'
+SQLALCHEMY_DATABASE_URI = "mysql+pymysql://{username}:{password}@{hostname}/{databasename}".format(
+    username="sql12231151",
+    password="iNNxRJnZLM",
+    hostname="sql12.freemysqlhosting.net",
+    databasename="sql12231151",
+)
 #app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
 #app.config["SQLALCHEMY_POOL_RECYCLE"] = 299
 #app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
