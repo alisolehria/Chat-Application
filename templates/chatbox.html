@@ -138,12 +138,14 @@
         console.log(msg.user);
         if (msg.user != '{{user.id}}' && msg.user == '{{friend.id}}'){
                 $('#messageArea').append('<div class="chat chat-left">														<div class="chat-avatar">															<a href="profile.html" class="avatar">																<img alt="John Doe" src="{{friend.avatar(120)}}" class="img-responsive img-circle"></a>														</div>														<div class="chat-body">															<div class="chat-bubble">																<div class="chat-content">																	<p>'+msg.data+'</p>																	<span class="chat-time">'+msg.time+'</span>																</div>																			</div																						</div>							</div>    ');
+                socket.emit('read', {msg: msg.id});
         }
-        else{
+        else if(msg.room == '{{room.roomID}}'){
             $('#messageArea').append('<div class="chat chat-right"> <div class="chat-body"> <div class="chat-bubble">																<div class="chat-content">																	<p>'+msg.data+'</p>																	<span class="chat-time">'+msg.time+'</span>																</div>	</div></div> </div>' );
         }
         var objDiv = document.getElementById("chatScroll");
         objDiv.scrollTop = objDiv.scrollHeight;
+
     });
 
 

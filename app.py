@@ -18,15 +18,25 @@ app = Flask(__name__)
 socketio = SocketIO(app)
 app.config['SECRET_KEY'] = 'Thisissupposedtobesecret!'
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:pass123@localhost/netapps'
-SQLALCHEMY_DATABASE_URI = "mysql+pymysql://{username}:{password}@{hostname}/{databasename}".format(
-    username="sql12231151",
-    password="iNNxRJnZLM",
-    hostname="sql12.freemysqlhosting.net",
-    databasename="sql12231151",
-)
-app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
-app.config["SQLALCHEMY_POOL_RECYCLE"] = 299
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://aliaschat_1612:XkQR1jlKThj36EpTSGzs@82aff7f1-1efb-4367-b5ed-21bb91efce66.aliaschat-1612.mysql.dbs.scalingo.com:31454/aliaschat_1612'
+#SQLALCHEMY_DATABASE_URI = "mysql+pymysql://{username}:{password}@{hostname}/{databasename}".format(
+#    username="sql12231151",
+#    password="iNNxRJnZLM",
+#    hostname="sql12.freemysqlhosting.net",
+#    databasename="sql12231151",
+#)
+#app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
+#app.config["SQLALCHEMY_POOL_RECYCLE"] = 299
+#app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+#SQLALCHEMY_DATABASE_URI = "mysql+pymysql://{username}:{password}@{hostname}/{databasename}".format(
+#    username="aliaschat_1612",
+#    password="XkQR1jlKThj36EpTSGzs",
+#    hostname="82aff7f1-1efb-4367-b5ed-21bb91efce66.aliaschat-1612.mysql.dbs.scalingo.com:31454",
+#    databasename="aliaschat_1612",
+#)
+#app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
+#app.config["SQLALCHEMY_POOL_RECYCLE"] = 299
+#app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 bootstrap = Bootstrap(app)
 db = SQLAlchemy(app)
 login_manager = LoginManager()
@@ -385,6 +395,16 @@ def join(message):
     print("Entered: "+message['room'])
     return ""
 
+@socketio.on('read')
+@login_required
+def join(message):
+    #join_room(message['room'])
+    #print("Entered: "+message['room'])
+    currentMessage = Message.query.filter_by(messageID=message['msg']).first()
+    currentMessage.seen = True
+    db.session.commit()
+    return ""
+
 @socketio.on('message_client')
 @login_required
 def handle_client_message(json):
@@ -395,14 +415,18 @@ def handle_client_message(json):
     print(current_user.id)
     room=json['room']
     sender = User.query.filter_by(id=message_user).first()
+    sendRoom = Room.query.filter_by(roomID=room).first()
     currentTime = datetime.datetime.now()
-    if sender == current_user:
-        new_message = Message(message=message,username=message_user,roomID=room,timestamp=currentTime,seen=False)
+    if sendRoom.group == False:
+        if sender == current_user:
+            new_message = Message(message=message,username=message_user,roomID=room,timestamp=currentTime,seen=False)
+        else:
+            new_message = Message(message=message,username=message_user,roomID=room,timestamp=currentTime,seen=True)
     else:
         new_message = Message(message=message,username=message_user,roomID=room,timestamp=currentTime,seen=True)
     db.session.add(new_message)
     db.session.commit()
-    emit('message_received',{"data":message,"user":current_user.id,"sender":sender.username,"time":str(new_message.timestamp)},room=room)
+    emit('message_received',{"data":message,"user":current_user.id,"sender":sender.username,"time":str(new_message.timestamp),"id":new_message.messageID,"room":room},room=room)
 
 
 @socketio.on('disconnect')
