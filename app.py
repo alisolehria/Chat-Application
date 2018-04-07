@@ -294,7 +294,7 @@ def chatBox():
             db.session.commit()
 
     print(messages)
-    return render_template("chatBox.html", friend = friend,room=current_room,user=current_user,messages=messages)
+    return render_template("chatbox.html", friend = friend,room=current_room,user=current_user,messages=messages)
     #return render_template("chatBox.html")
 
 
