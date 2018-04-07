@@ -35,8 +35,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://aliaschat_1612:XkQR1jlKThj36EpT
 #    databasename="aliaschat_1612",
 #)
 #app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
-#app.config["SQLALCHEMY_POOL_RECYCLE"] = 299
-#app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["SQLALCHEMY_POOL_RECYCLE"] = 299
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 bootstrap = Bootstrap(app)
 db = SQLAlchemy(app)
 login_manager = LoginManager()
