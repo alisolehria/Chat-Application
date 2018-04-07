@@ -373,7 +373,7 @@ def leaveGroup():
 @socketio.on('connect')
 @login_required
 def client_connect():
-    print(current_user.username+" Conncected to Socket")
+    print(current_user.username+" ======================================Conncected to Socket=============")
     current_user.access = "Online"
     db.session.commit()
     emit('server_response',{"data":"Connected to Server"})
