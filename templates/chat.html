@@ -231,7 +231,7 @@
 
 
 //socketio script
-        var socket = io.connect('https://' + document.domain + ':' + location.port);
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
     socket.on('connect', function() {
         socket.emit('connect_message', {data: 'I\'m connected!'});
         socket.removeAllListeners();
@@ -267,7 +267,7 @@ var finterval = setInterval(function()
 				console.log(error);
 			}
 		});
-    }, 3000);//time in milliseconds
+    }, 10000);//time in milliseconds
 
         function openGroup(id){
             $.ajax({
