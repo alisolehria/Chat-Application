@@ -101,7 +101,7 @@
 
 
 											</div>
-											<div class="chat-profile-info">
+									<div class="chat-profile-info">
 												<ul class="user-det-list">
 													<li>
 														<span>Username:</span>
@@ -109,15 +109,24 @@
 													</li>
 													<li>
 														<span>DOB:</span>
-														<span class="pull-right text-muted">24 July</span>
+														<span class="pull-right text-muted">{{user.DOB}}</span>
 													</li>
 													<li>
 														<span>Email:</span>
 														<span class="pull-right text-muted">{{user.email}}</span>
 													</li>
+                                                    	<li>
+														<span>Gender:</span>
+                                                            {% if user.gender == True %}
+														<span class="pull-right text-muted">Female</span>
+                                                            {% elif user.gender == False %}
+                                                            <span class="pull-right text-muted">Male</span>
+                                                            {% endif %}
+													</li>
 
 												</ul>
 											</div>
+
 
 										</div>
 									</div>
