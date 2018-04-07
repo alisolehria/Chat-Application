@@ -1,211 +1,223 @@
 {% extends "bootstrap/base.html" %}
-
 <!DOCTYPE html>
 <html>
-	<head>
-			<meta charset="utf-8">
-		    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-		    <meta name="viewport" content="width=device-width, initial-scale=1">
-		    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-		    <!--
-			 ╭────────────────────────────────────────────────────────────────────────────╮
-			 │                   ____________________________________                     |
-			 │                 < Hello!								  >                   |
-			 │                   ------------------------------------                     |
-			 │                       \   ^__^                                             |
-			 │                        \  (oo)\_______                                     |
-			 │                           (__)\       )\/\                                 |
-			 │                               ||----w |                                    |
-			 │                               ||     ||                                    |
-			 │                                                                            |
-			 ╰────────────────────────────────────────────────────────────────────────────╯
- 			-->
-		    <meta name="description" content="First page for chat app">
-			<meta name="author" content="Created by EJ">
-		<title>Not Discord</title>
-		{% block styles %}
-{{super()}}
-	<link rel="stylesheet" href="{{url_for('static',filename='css/bootstrap.min.css') }}">
-		<link rel="stylesheet" type="text/css" href="{{url_for('static',filename='css/index.css') }}">
-		{% endblock %}
 
+<!-- Mirrored from dreamguys.co.in/smarthr/blue/chat.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 05 Apr 2018 17:18:48 GMT -->
+<head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
 
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-<script src='https://code.jquery.com/jquery-2.2.4.min.js'></script>
+  {% block title %}
+    Alias Chat
+{% endblock %}
 
+        {% block styles %}
 
-	</head>
-	<body>
-		{% block content %}
-                <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
-        <script src='https://code.jquery.com/jquery-2.2.4.min.js'></script>
-		 <div class="wrapper">
-            <!-- Sidebar Holder -->
-            <nav id="sidebar">
-                <div class="sidebar-header">
-                    <img src="{{ user.avatar(128) }}">
-                    <br>
-                    <h5 class="text-center current-user">{{ name }}</h5>
+        {{super()}}
+
+                <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+        		 <link rel="stylesheet" href="{{ url_for('static', filename='css/font-awesome.min.css') }}">
+		 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+		<link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700" rel="stylesheet">
+                {% endblock %}
+
+    </head>
+    <body>
+
+    	{% block content %}
+        <div class="main-wrapper">
+            <div class="header">
+                <div class="header-left">
+
+						<img src="{{ url_for('static', filename='img/logo1.png') }}" width="120" height="60" alt="">
+
                 </div>
-                <ul class="list-unstyled components">
+<a id="mobile_btn" class="mobile_btn pull-left" href="#sidebar"><i class="fa fa-bars" aria-hidden="true"></i></a>
+                <div class="page-title-box pull-left">
+					<h3>Alias Technologies</h3>
+                </div>
+                <div class="pull-right">
+                    <a href="{{url_for('logout')}}">
+          <span class="glyphicon glyphicon-log-out" style="color:dimgrey"> </span>
+        </a>
 
-                    <li>     <div class="container">
-                            <form id="myfriends" >
-                         <i class="glyphicon glyphicon-briefcase"></i>
-                             <button type = "submit" class = "btn btn-link"> Friends</button>
-                        </form>
-                         </div>
-                    </li>
-                     <li>     <div class="container">
-                            <form id="mygroups" >
-                         <i class="glyphicon glyphicon-briefcase"></i>
-                             <button type = "submit" class = "btn btn-link"> Groups</button>
-                        </form>
-                         </div>
-                    </li>
-                    <li>
-                        <div class="container">
-                        <form id="friends" >
-                            <i class="glyphicon glyphicon-briefcase"></i>
-                            <button type = "submit" class = "btn btn-link"> Add Friends</button>
-                        </form>
-                            </div>
-                    </li>
-                          <li>
-                       <div class="container">
-                        <form id="groups" >
-                            <i class="glyphicon glyphicon-briefcase"></i>
-                            <button type = "submit" class = "btn btn-link">Browser Groups</button>
-                        </form>
-                            </div>
-                    </li>
-                </ul>
-                <a type="button" class="btn btn-success logout" href="{{url_for('logout')}}">Log out</a>
-            </nav>
-
-            <!-- Page Content Holder -->
-            <div class="container no-gutters">
-            	<div class="row">
-            		<!--List of chat, this section already has auto scroll bar -->
-            		<div class="col-lg-3 chat-list">
-            			<div class="chat-bar">
-            				 <input class="form-control chat-search" type="search" placeholder="Search" aria-label="Search">
-
-            			</div>
-
-            			<ul class="nav nav-tabs list-group " id="nav-tab" role="tablist">
-                             <div id = "mainHolder">
-
-</div>
-						</ul>
-
-            		</div>
-            		<!--Actual chat, bubbles etc.-->
-            		<div id="mainChat" class="col-lg-9 chat">
-
-            		</div>
-            	</div>
+                    </div>
             </div>
-      </div>
+            <div class="sidebar" id="sidebar">
+                <div class="sidebar-inner slimscroll">
+					<div class="sidebar-menu">
+						<ul>
+
+							<li class="menu-title">Groups <a href="#chat1" data-toggle="modal" data-target="#add_group" onClick="addGroup()"><i class="fa fa-plus"></i></a></li>
+                            {% for group in filteredGroups %}
+                            	<li>
+								<a href="#chat1" onClick="openGroup('{{group.roomID}}')">{{group.roomName}}</a>
+							</li>
+                            {% endfor %}
+
+
+							<li class="menu-title">Friend Chats <a href="#" data-toggle="modal" data-target="#add_chat_user" onClick="addFriends()"><i class="fa fa-plus"></i></a></li>
+							<div id="friendList">
+
+
+
+                            </div>
 
 
 
 
-     <script>
 
-	$(function(){
-	$('#friends').submit(function(){
-		$.ajax({
-			url: '/getUsers',
-			data: "{{name}}",
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+						</ul>
+					</div>
+                </div>
+            </div>
+            <div class="page-wrapper">
+				<div class="chat-main-row">
+					<div id = "chatHolder" class="chat-main-wrapper">
+
+
+
+
+
+
+
+
+
+
+
+
+
+					</div>
+				</div>
+
+				<div id="add_group" class="modal custom-modal fade center-modal" role="dialog">
+					<div class="modal-dialog">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<div class="modal-content">
+							<div class="modal-header">
+								<h3 class="modal-title">Create a group</h3>
+							</div>
+							<div class="modal-body">
+								<p>Groups are where your team communicates. They’re best when organized around a topic — #leads, for example.</p>
+{% import "bootstrap/wtf.html" as wtf %}
+                                <form action = "/chat" method = "POST">
+								<div class="form-group">
+									  {{ form.hidden_tag() }}
+        			   {{ wtf.form_field(form.roomName) }}
+								</div>
+								<div class="m-t-50 text-center">
+								<button class="btn btn-primary btn-lg">Create Group</button>
+								</div>
+							</form>
+                                <h3 class="modal-title">Join Group</h3>
+                                    <ul class="media-list media-list-linked chat-user-list">
+                                              <div id="groupList"></div>
+									</ul>
+							</div>
+
+						</div>
+					</div>
+				</div>
+				<div id="add_chat_user" class="modal custom-modal fade center-modal" role="dialog">
+					<div class="modal-dialog">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<div class="modal-content">
+							<div class="modal-header">
+								<h3 class="modal-title">Add Friend</h3>
+							</div>
+							<div class="modal-body">
+								<div class="input-group m-b-30">
+									<input placeholder="Search to start a chat" class="form-control search-input input-lg" id="btn-input" type="text">
+									<span class="input-group-btn">
+										<button class="btn btn-primary btn-lg">Search</button>
+									</span>
+								</div>
+								<div>
+									<h2>Users:</h2>
+                                    <p>Press on the user to add</p>
+									<ul class="media-list media-list-linked chat-user-list">
+                                        <div id="usersList"></div>
+									</ul>
+								</div>
+
+							</div>
+						</div>
+					</div>
+				</div>
+
+            </div>
+        </div>
+
+
+		{% endblock %}
+    </body>
+    {% block scripts %}
+    {{super()}}
+    <script src="{{url_for('.static', filename='js/jquery-3.2.1.min.js')}}"></script>
+    <script src="{{url_for('.static', filename='js/bootstrap.min.js')}}"></script>
+    <script src="{{url_for('.static', filename='js/jquery.slimscroll.js')}}"></script>
+    <script src="{{url_for('.static', filename='js/dropfiles.js')}}"></script>
+    <script src="{{url_for('.static', filename='js/app.js')}}"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+
+
+    <script>
+
+
+    window.onload = function()
+    {
+
+       $.ajax({
+			url: '/friendList',
 			type: 'POST',
 			success: function(response){
-          		$("#mainHolder").html(response);
+                $("#friendList").html(response);
 
 			},
 			error: function(error){
+
 				console.log(error);
 			}
 		});
-		return false;
-	});
-});
+        $.ajax({
+			url: '/profile',
+			type: 'POST',
+			success: function(response){
+                $("#chatHolder").html(response);
 
+			},
+			error: function(error){
 
+				console.log(error);
+			}
+		});
 
- </script>
-<script>
+    }//time in milliseconds
+
 
     function chatOpen(id){
         $.ajax({
 			url: '/chatBox',
-			data: {"id":id},
+            data: {"id":id},
 			type: 'POST',
 			success: function(response){
-          		$("#mainChat").html(response);
-
-			},
-			error: function(error){
-				console.log(error);
-			}
-		});
-    }
-</script>
-
-<script>
-
-	$(function(){
-	$('#groups').submit(function(){
-		$.ajax({
-			url: '/browseGroups',
-			type: 'POST',
-			success: function(response){
-          		$("#mainHolder").html(response);
-			},
-			error: function(error){
-				console.log(error);
-			}
-		});
-		return false;
-	});
-});
-
-</script>
-
-
-        <script>
-
-	$(function(){
-	$('#mygroups').submit(function(){
-		$.ajax({
-			url: '/myGroups',
-			type: 'POST',
-			success: function(response){
-          		$("#mainHolder").html(response);
-			},
-			error: function(error){
-				console.log(error);
-			}
-		});
-		return false;
-	});
-});
-
-</script>
-
-        <script>
-
-    function groupOpen(id){
-        $.ajax({
-			url: '/groupChat',
-			data: {"id":id},
-			type: 'POST',
-			success: function(response){
-                      console.log("Here");
-          		$("#mainChat").html(response);
+                $("#chatHolder").html(response);
 
 			},
 			error: function(error){
@@ -214,8 +226,9 @@
 			}
 		});
     }
-</script>
-<script>
+
+
+
 
 //socketio script
         var socket = io.connect('http://' + document.domain + ':' + location.port);
@@ -224,19 +237,12 @@
         socket.removeAllListeners();
     });
 
-
-</script>
-
-<script>
- //clearInterval(interval);
-
-    window.onload = function()
-    {
-       $.ajax({
-			url: '/friendList',
+        function addFriends(){
+            $.ajax({
+			url: '/getUsers',
 			type: 'POST',
 			success: function(response){
-                $("#mainHolder").html(response);
+                $("#usersList").html(response);
 
 			},
 			error: function(error){
@@ -244,17 +250,62 @@
 				console.log(error);
 			}
 		});
-    }//time in milliseconds
+        }
+
+        clearInterval(finterval);
+var finterval = setInterval(function()
+    {
+        $.ajax({
+			url: '/friendList',
+			type: 'POST',
+			success: function(response){
+                $("#friendList").html(response);
+
+			},
+			error: function(error){
+
+				console.log(error);
+			}
+		});
+    }, 3000);//time in milliseconds
+
+        function openGroup(id){
+            $.ajax({
+			url: '/groupChat',
+			data: {"id":id},
+			type: 'POST',
+			success: function(response){
+
+          		 $("#chatHolder").html(response);
+
+			},
+			error: function(error){
+
+				console.log(error);
+			}
+		});
+        }
+
+        function addGroup(){
+            $.ajax({
+			url: '/getGroups',
+			type: 'POST',
+			success: function(response){
+
+                $("#groupList").html(response);
+
+			},
+			error: function(error){
+
+				console.log(error);
+			}
+		});
+        }
+
+    </script>
 
 
-
-</script>
-
-
-
-
-{% endblock %}
-	</body>
+       {% endblock %}
 
 
 </html>

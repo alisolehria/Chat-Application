@@ -1,0 +1,36 @@
+{% for user in users %}
+										<li class="media">
+											<a href="#" class="media-link" onClick="add('{{user.id}}')">
+												<div class="media-left"><img src="{{user.avatar(60)}}" /></div>
+												<div class="media-body media-middle text-nowrap">
+													<div class="user-name">{{user.username}}</div>
+													<span class="designation">{{user.firstName}} {{user.lastName}}</span>
+												</div>
+												<div class="media-right media-middle text-nowrap">
+													<div class="online-date">{{user.access}}</div>
+												</div>
+											</a>
+										</li>
+                                        {% endfor %}
+
+<script>
+
+function add(id){
+     $.ajax({
+			url: '/addFriend',
+			type: 'POST',
+            data: {"friends":id},
+			success: function(response){
+                 location.reload();
+
+
+			},
+			error: function(error){
+
+				console.log(error);
+			}
+		});
+
+}
+
+</script>

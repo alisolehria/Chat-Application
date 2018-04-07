@@ -1,0 +1,35 @@
+
+{% for group in groups %}
+                                       <li class="media">
+											<a href="#" class="media-link" onClick="addGroup('{{group.roomID}}')">
+												<div class="media-body media-middle text-nowrap">
+													<div class="user-name">{{group.roomName}}</div>
+
+												</div>
+
+											</a>
+										</li>
+                                        {% endfor %}
+
+
+<script>
+
+function addGroup(id){
+     $.ajax({
+			url: '/addGroup',
+			type: 'POST',
+            data: {"id":id},
+			success: function(response){
+                 location.reload();
+
+
+			},
+			error: function(error){
+
+				console.log(error);
+			}
+		});
+
+}
+
+</script>

@@ -1,18 +1,23 @@
-  {% if friendList %}
-                                 {% for friend in friendList %}
-	            			<li class="nav-item chat-item"  >
-								  <a class="nav-link active " id="home-tab" data-toggle="tab" href="#chat1" role="tab" aria-controls="home" aria-selected="true" onclick="chatOpen({{friend.id}})">
-								    <div class="d-flex w-100 justify-content-between">
-								    	<img src="{{url_for('static',filename='img/logo.png')}}" class="rounded-circle chat-thumbnail">
-								      <h5 class="float-left">{{ friend.firstName }} {{ friend.lastName }}</h5>
-								    </div>
-								    <p class="preview">{{friend.lastMessage.message}}</p>
-								    <small>{{friend.timestamp}}</small>
+{% for friend in friendList %}
+    <li>
+								<a href="#chat1" onclick="chatOpen({{friend.id}})">
+                                    {% if friend.access == "Online" %}
+                                    <span class="status online"></span>
+                                    {% else %}
+                                    <span class="status offline"></span>
 
-								  </a>
-							  </li>
-                                 {% endfor %}
-                                {% else %}
-                                 <h5>No Friends found! Add Friends.</h5>
-                                 {% endif %}
+                                    {% endif %}
 
+
+                                    {{friend.firstName}} {{friend.lastName}}<span class="badge bg-danger pull-right">{{friend.count}}</span></a>
+    </li>
+
+
+{% endfor %}
+
+
+<script>
+
+
+
+</script>

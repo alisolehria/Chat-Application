@@ -2,7 +2,7 @@ from flask import Flask, render_template, redirect, url_for, request, jsonify
 from flask_socketio import SocketIO,emit,join_room,leave_room
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField
+from wtforms import StringField, PasswordField, BooleanField, SelectField
 from wtforms.validators import InputRequired, Email, Length
 from flask_sqlalchemy  import SQLAlchemy
 from sqlalchemy.sql.expression import func
@@ -17,7 +17,16 @@ from hashlib import md5
 app = Flask(__name__)
 socketio = SocketIO(app)
 app.config['SECRET_KEY'] = 'Thisissupposedtobesecret!'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:pass123@localhost/netapps'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:pass123@localhost/netapps'
+SQLALCHEMY_DATABASE_URI = "mysql+mysqlconnector://{username}:{password}@{hostname}/{databasename}".format(
+    username="sql12231151",
+    password="iNNxRJnZLM",
+    hostname="sql12.freemysqlhosting.net",
+    databasename="sql12231151",
+)
+app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
+app.config["SQLALCHEMY_POOL_RECYCLE"] = 299
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 bootstrap = Bootstrap(app)
 db = SQLAlchemy(app)
 login_manager = LoginManager()
@@ -42,7 +51,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     firstName = db.Column(db.String(80),nullable=False)
     lastName = db.Column(db.String(80),nullable=False)
-    DOB = db.Column(db.DateTime)
+    DOB = db.Column(db.Date)
     gender = db.Column(db.Boolean)
     joinDate = db.Column(db.DateTime)
     access = db.Column(db.String(80))
@@ -50,8 +59,8 @@ class User(UserMixin, db.Model):
     roomUsers = db.relationship("Room", secondary=RoomUsers)
     message = db.relationship("Message", uselist=False,backref="user")
     friends = db.relationship("User",secondary=Friend, primaryjoin=(Friend.c.username1 == id),secondaryjoin=(Friend.c.username2 == id))
-    lastMessage = ""
-    timestamp = ""
+    count = ""
+
 
     def avatar(self, size):
         digest = md5(self.email.lower().encode('utf-8')).hexdigest()
@@ -76,6 +85,7 @@ class Message(db.Model):
     username = db.Column(db.Integer,db.ForeignKey("user.id"))
     roomID = db.Column(db.Integer,db.ForeignKey("room.roomID"))
     timestamp = db.Column(db.DateTime,nullable=False)
+    seen = db.Column(db.Boolean)
     userInfo = ""
 #
 #class Report(db.Model):
@@ -91,14 +101,15 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 class LoginForm(FlaskForm):
-    username = StringField('username', validators=[InputRequired(), Length(min=4, max=15)])
-    password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=80)])
+    username = StringField('Username', validators=[InputRequired(), Length(min=4, max=15)])
+    password = PasswordField('Password', validators=[InputRequired(), Length(min=8, max=80)])
     remember = BooleanField('remember me')
 
 class RegisterForm(FlaskForm):
     firstName = StringField('First Name', validators=[InputRequired(), Length(min=3, max=15)])
-    lastName = StringField('Last Name', validators=[InputRequired(), Length(min=4, max=15)])
+    lastName = StringField('Last Name', validators=[InputRequired(), Length(min=2, max=15)])
     email = StringField('Email', validators=[InputRequired(), Email(message='Invalid email'), Length(max=50)])
+    gender = SelectField('Gender',choices=[('m',"Male"),('f',"Female")], validators=[InputRequired()])
     username = StringField('Username', validators=[InputRequired(), Length(min=4, max=15)])
     password = PasswordField('Password', validators=[InputRequired(), Length(min=8, max=80)])
 
@@ -131,19 +142,62 @@ def signup():
     form = RegisterForm()
     if form.validate_on_submit():
         hashed_password = generate_password_hash(form.password.data, method='sha256')
-        new_user = User(username=form.username.data, email=form.email.data, password=hashed_password,firstName=form.firstName.data,lastName=form.lastName.data)
+        date = request.form["dob"]
+        dob = datetime.datetime.strptime(date, '%Y-%m-%d')
+        dob = dob.date()
+        gender = form.gender.data
+        if gender == "m":
+            gender = False
+        else:
+            gender = True
+
+        joinDate = datetime.datetime.now()
+        new_user = User(username=form.username.data, email=form.email.data, password=hashed_password,firstName=form.firstName.data,lastName=form.lastName.data,gender=gender,DOB=dob,joinDate = joinDate)
         db.session.add(new_user)
         db.session.commit()
 
-        return '<h1>New user has been created!</h1>'
+        return redirect(url_for('login'))
         #return '<h1>' + form.username.data + ' ' + form.email.data + ' ' + form.password.data + '</h1>'
 
-    return render_template('signup.html', form=form)
+    return render_template('register.html', form=form)
 
-@app.route('/chat')
+@app.route('/chat',methods=['GET','POST'])
 @login_required
 def chat():
-    return render_template('chat.html',user=current_user,name=current_user.username)
+    form = GroupForm()
+
+    if form.validate_on_submit():
+        roomName = form.roomName.data
+        new_room = Room(roomName=roomName,admin = current_user.id, group = True)
+        current_user.roomUsers.append(new_room)
+        db.session.commit()
+
+
+    groups = Room.query.filter_by(group=True).all()
+    filteredGroups = []
+    for group in groups:
+        if group in current_user.roomUsers:
+            filteredGroups.append(group)
+
+    return render_template('chat.html',user=current_user,friends=current_user.friends,filteredGroups=filteredGroups,form=form)
+
+
+@app.route('/getGroups',methods=['GET','POST'])
+@login_required
+def getGroups():
+    groups = Room.query.filter_by(group=True).all()
+    filteredGroups = list(groups)
+    for group in groups:
+        if group in current_user.roomUsers:
+            filteredGroups.remove(group)
+    print(filteredGroups)
+    return render_template("groupList.html",groups=filteredGroups)
+
+@app.route('/profile',methods=['GET','POST'])
+@login_required
+def profile():
+    print("Displaying Profile")
+    return render_template('profile.html',user=current_user)
 
 
 @app.route('/friendList',methods=['GET','POST'])
@@ -158,15 +212,11 @@ def friendList():
         for room in allRooms:
             if room in current_user.roomUsers and room in friend.roomUsers:
                 current_room = room
-                lastMessage = Message.query.filter_by(roomID=current_room.roomID).order_by(desc(Message.messageID)).first()
-                friend.lastMessage = lastMessage
-                friend.timestamp = lastMessage.timestamp
+                seenCount = Message.query.filter_by(roomID=current_room.roomID).filter(Message.username!=current_user.id).filter_by(seen=False).count()
 
+                friend.count = seenCount
 
-        #sortedList = current_user.friends[0].lastMessage.messageID
-    sortedList = sorted(current_user.friends, key=lambda friend: friend.lastMessage.messageID,reverse = True)
-    print(sortedList)
-    return render_template('friendList.html', name=current_user.username, friendList = sortedList)
+    return render_template('friendList.html',  friendList = current_user.friends)
 
 @app.route('/logout')
 @login_required
@@ -182,12 +232,25 @@ def logout():
 @login_required
 def getUsers():
     users = User.query.filter(User.id != current_user.id).all()
+    #print(current_user.friends)
+    filteredUsers = list(users)
     for user in users:
         if user in current_user.friends:
-            users.remove(user)
-    #print(users)
-    return render_template("usersList.html",users = users)
+            #print(user)
+            filteredUsers.remove(user)
 
+    return render_template("userList.html",users = filteredUsers)
+
+
+
+@app.route('/addGroup', methods=['GET', 'POST'])
+@login_required
+def addGroup():
+    roomId = request.form["id"]
+    room = Room.query.filter_by(roomID = roomId).first()
+    current_user.roomUsers.append(room)
+    db.session.commit()
+    return ""
 
 
 @app.route('/addFriend', methods=['GET', 'POST'])
@@ -205,11 +268,13 @@ def addFriend():
     current_user.roomUsers.append(new_room)
     new_friend.roomUsers.append(new_room)
     db.session.commit()
+    print("Friend Added")
     return ""
 
 @app.route('/chatBox', methods=['GET', 'POST'])
 @login_required
 def chatBox():
+    print("Here")
     friendId = request.form["id"]
     friend = User.query.filter_by(id = friendId).first()
 
@@ -223,9 +288,14 @@ def chatBox():
 
     #retrive previous messages of this room
     messages = Message.query.filter_by(roomID=current_room.roomID).all()
+    for message in messages:
+        if message.username != current_user.id:
+            message.seen = True
+            db.session.commit()
 
     print(messages)
-    return render_template("chatbox.html", friend = friend,room=current_room,user=current_user,messages=messages)
+    return render_template("chatBox.html", friend = friend,room=current_room,user=current_user,messages=messages)
+    #return render_template("chatBox.html")
 
 
 @app.route('/browseGroups', methods=['GET', 'POST'])
@@ -241,14 +311,14 @@ def browseGroups():
 @app.route('/createGroup', methods=['GET', 'POST'])
 @login_required
 def createGroup():
-    form = GroupForm()
+
     if form.validate_on_submit():
         roomName = form.roomName.data
         new_room = Room(roomName=roomName,admin = current_user.id, group = True)
         current_user.roomUsers.append(new_room)
         db.session.commit()
 
-    return render_template("createGroup.html",form=form)
+    return redirect(url_for('chat'))
 
 
 @app.route('/myGroups', methods=['GET', 'POST'])
@@ -270,6 +340,7 @@ def status():
     #print(access.lastName)
     response = {}
     response['access'] = access.access
+
     return jsonify(response)
 
 @app.route('/groupChat', methods=['GET', 'POST'])
@@ -289,12 +360,20 @@ def groupChat():
     print(messages)
     return render_template("groupChat.html",room=current_room,user=current_user,messages=messages,name=current_user.username)
 
+@app.route('/leaveGroup', methods=['GET', 'POST'])
+@login_required
+def leaveGroup():
+    roomId = request.form["id"]
+    room = Room.query.filter_by(roomID=roomId).first()
+    current_user.roomUsers.remove(room)
+    db.session.commit()
+    return ""
 
 #socketio functions
 @socketio.on('connect')
 @login_required
 def client_connect():
-    print("Client Conncected")
+    print(current_user.username+" Conncected to Socket")
     current_user.access = "Online"
     db.session.commit()
     emit('server_response',{"data":"Connected to Server"})
@@ -313,13 +392,17 @@ def handle_client_message(json):
     print("Message for room: "+json['room'])
 
     message_user =json['user']
+    print(current_user.id)
     room=json['room']
     sender = User.query.filter_by(id=message_user).first()
     currentTime = datetime.datetime.now()
-    new_message = Message(message=message,username=message_user,roomID=room,timestamp=currentTime)
+    if sender == current_user:
+        new_message = Message(message=message,username=message_user,roomID=room,timestamp=currentTime,seen=False)
+    else:
+        new_message = Message(message=message,username=message_user,roomID=room,timestamp=currentTime,seen=True)
     db.session.add(new_message)
     db.session.commit()
-    emit('message_received',{"data":message,"user":current_user.id,"sender":sender.username},room=room)
+    emit('message_received',{"data":message,"user":current_user.id,"sender":sender.username,"time":str(new_message.timestamp)},room=room)
 
 
 @socketio.on('disconnect')
@@ -327,7 +410,7 @@ def test_disconnect():
     lastAccess = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
     current_user.access = "Last Online: "+lastAccess
     db.session.commit()
-    print('Client disconnected')
+    print(current_user.username+" Disconnected")
 
 if __name__ == '__main__':
     app.jinja_env.auto_reload = True

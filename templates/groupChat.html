@@ -1,56 +1,174 @@
-       			<div class="chat-content tab-content content" id="nav-tabContent">
-	            			<div class="tab-pane fade show active" id="chat1" role="tabpanel" aria-labelledby="chat1-tab">
-	            				<!-- Profile section of chat-->
-								<div class="contact-profile">
-									<img src="{{url_for('static',filename='img/logo.png')}}" alt="" />
 
-									<h2>{{room.roomName}}</h2>
+<div class="col-xs-9 message-view task-view">
+							<div class="chat-window">
+								<div class="chat-header">
+									<div class="navbar">
+										<div class="user-details">
+											<div class="pull-left user-img m-r-10">
 
-								</div>
-								<div class="messages">
-									<ul id = "messageArea">
-                                        {% for message in messages %}
-                                            {% if message.username == user.id %}
-                                                <li class = "sent">
+											</div>
+											<div class="user-info pull-left">
+												<a><span class="font-bold">{{room.roomName}}</span> </a>
+												<span id= "status" class="last-seen"></span>
+											</div>
+                                            	<div class="user-info pull-right">
+												<a type="button" class="btn btn-warning" onClick="leaveGroup('{{room.roomID}}')">Leave Group</a>
+											</div>
+										</div>
 
-                                                    <p>{{message.userInfo.username}}: <br>
 
-                                                        {{message.message}}</p></li>
-                                            {% else %}
-                                                <li class = "replies"> <p>{{message.userInfo.username}}: <br> {{message.message}}</p></li>
-                                            {% endif %}
-                                        {% endfor %}
-									</ul>
-
-									<div class="form-group">
-									<input type="text" class = "form-control input-lg" placeholder="Write your message..." id="message" />
-									<i class="fa fa-paperclip attachment" aria-hidden="true"></i>
-									<button class="form-control submit" onclick="send_groupmessage()">Send</button>
 									</div>
-
 								</div>
-								<!-- Input bar and send button -->
+								<div class="chat-contents">
+									<div class="chat-content-wrap">
+										<div class="chat-wrap-inner">
+											<div class="chat-box">
+												<div id="messageArea" class="chats">
+                                {% for message in messages %}
+                                    {% if message.username == user.id %}
 
+													<div class="chat chat-right">
+														<div class="chat-body">
+															<div class="chat-bubble">
+																<div class="chat-content">
+
+																	<p>{{message.message}}</p>
+																	<span class="chat-time">{{message.timestamp}}</span>
+																</div>
+
+															</div>
+														</div>
+													</div>
+
+                                    {% else %}
+                                                	<div class="chat chat-left">
+
+														<div class="chat-body">
+															<div class="chat-bubble">
+																<div class="chat-content">
+                                                                    <b><p>{{message.userInfo.username}}:</p></b>
+																	<p>{{message.message}}</p>
+
+																	<span class="chat-time">{{message.timestamp}}</span>
+																</div>
+
+															</div>
+
+														</div>
+													</div>
+
+                                    {% endif %}
+
+
+                                {% endfor %}
+
+
+
+
+
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="chat-footer">
+									<div class="message-bar">
+										<div class="message-inner">
+											<a class="link attach-icon" href="#" data-toggle="modal" data-target="#drag_files"><img src="assets/img/attachment.png" alt=""></a>
+											<div class="message-area"><div class="input-group">
+												<textarea class="form-control" placeholder="Type message..." id="message"></textarea>
+												<span class="input-group-btn">
+													<button class="btn btn-primary" type="button"  onclick="send_message()" id="enter"><i class="fa fa-send"></i></button>
+												</span>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
 							</div>
-
-
 						</div>
+			<div class="col-xs-3 profile-right fixed-sidebar-right chat-profile-view" id="task_window">
+							<div class="display-table profile-right-inner">
+								<div class="table-row">
+									<div class="table-body">
+										<div class="table-content">
+											<div class="chat-profile-img">
+												<div class="edit-profile-img">
+													<img class="avatar" src="{{user.avatar(128)}}" alt="">
+
+												</div>
+												<h3 class="user-name m-t-10 m-b-0">{{user.firstName}} {{user.lastName}}</h3>
+
+
+											</div>
+											<div class="chat-profile-info">
+												<ul class="user-det-list">
+													<li>
+														<span>Username:</span>
+														<span class="pull-right text-muted">{{user.username}}</span>
+													</li>
+													<li>
+														<span>DOB:</span>
+														<span class="pull-right text-muted">24 July</span>
+													</li>
+													<li>
+														<span>Email:</span>
+														<span class="pull-right text-muted">{{user.email}}</span>
+													</li>
+
+												</ul>
+											</div>
+
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+
+
 <script>
     socket.removeAllListeners();
     socket.emit('join', {room: '{{room.roomID}}'});
     socket.on('message_received', function(msg) {
         console.log(msg.user);
         if (msg.user != '{{user.id}}'){
-                $('#messageArea').append('<li class = "replies"> <p>'+msg.sender+": <br>"+msg.data+'</p></li>');
+                $('#messageArea').append('<div class="chat chat-left">																											<div class="chat-body">															<div class="chat-bubble">																<div class="chat-content"><b><p>'+msg.sender+':</p></b>																	<p>'+msg.data+'</p>																	<span class="chat-time">'+msg.time+'</span>																</div>																			</div																						</div>							</div>    ');
+        }
+        else{
+            $('#messageArea').append('<div class="chat chat-right"> <div class="chat-body"> <div class="chat-bubble">																<div class="chat-content">																	<p>'+msg.data+'</p>																	<span class="chat-time">'+msg.time+'</span>																</div>	</div></div> </div>' );
         }
     });
 
-    function send_groupmessage() {
+    function send_message() {
         var message = document.getElementById("message").value;
         console.log("Message is :"+message)
         socket.emit('message_client', {"message": message,"room": '{{room.roomID}}',"user":'{{user.id}}'});
         document.getElementById("message").value = "";
-        $('#messageArea').append('<li class = "sent"> <p> {{name}}: <br>'+message+'</p></li>' );
+
     }
+
+    function leaveGroup(id){
+         $.ajax({
+			url: '/leaveGroup',
+			type: 'POST',
+            data: {"id":id},
+			success: function(response){
+                 location.reload();
+
+
+			},
+			error: function(error){
+
+				console.log(error);
+			}
+		});
+    }
+
+        $("#message").keyup(function(event) {
+    if (event.keyCode === 13) {
+        $("#enter").click();
+    }
+});
 
 </script>

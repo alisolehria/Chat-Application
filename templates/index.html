@@ -1,43 +1,364 @@
 {% extends "bootstrap/base.html" %}
+<!DOCTYPE html>
+<html lang="zxx">
 
-{% block title %}
-Demo App
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-114419061-2"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-114419061-2');
+
+    </script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Chome Mobile Panel Color -->
+    <meta name="theme-color" content="#263238">
+    <!-- Title -->
+    {% block title %}
+Alilas Technologies
 {% endblock %}
 
-{% block styles %}
+        <!-- Icon -->
+    {% block styles %}
 {{super()}}
-<link rel="stylesheet" href="{{url_for('.static', filename='starter-template.css')}}">
-{% endblock %}
+    <link rel="shortcut icon" href="images/logo-sm.png" type="image/x-icon">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="{{url_for('.static', filename='css/bootstrap.min.css')}}">
+    <!-- Owl Carousel -->
+    <link rel="stylesheet" href="{{url_for('.static', filename='css/owl.carousel.css')}}">
+    <!-- Owl Carousel Theme-->
+    <link rel="stylesheet" href="{{url_for('.static', filename='css/owl.theme.default.css')}}">
+    <!-- Animations -->
+    <link rel="stylesheet" href="{{url_for('.static', filename='css/animations.css')}}">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{{url_for('.static', filename='css/font-awesome.min.css')}}">
+    <!-- Animate -->
+    <link rel="stylesheet" href="{{url_for('.static', filename='css/animate.css')}}">
+    <!-- Lity -->
+    <link rel="stylesheet" href="{{url_for('.static', filename='css/lity.css')}}">
+    <!-- Style -->
+    <link rel="stylesheet" href="{{url_for('.static', filename='css/style-index.css')}}">
+    <!-- Media Queries -->
+    <link rel="stylesheet" href="{{url_for('.static', filename='css/media-queries.css')}}">
+    <!-- Change color here -->
 
-{% block content %}
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">Project name</a>
+    <!--<link href="css/color/violet.css" rel="stylesheet">-->
+    <!--<link href="css/color/violet-2.css" rel="stylesheet">-->
+    <!--<link href="css/color/blue.css" rel="stylesheet">-->
+    <!--<link href="css/color/blue-2.css" rel="stylesheet">-->
+    <!--<link href="css/color/green.css" rel="stylesheet">-->
+    <!--<link href="css/color/green-2.css" rel="stylesheet">-->
+    <!--<link href="css/color/cyan.css" rel="stylesheet">-->
+    <link rel="stylesheet" href="{{url_for('.static', filename='css/cyan-2.css')}}">
+    <!--<link href="css/color/red.css" rel="stylesheet">-->
+    <!--<link href="css/color/red-2.css" rel="stylesheet">-->
+    <!-- Demo -->
+    <link rel="stylesheet" href="{{url_for('.static', filename='css/demo.css')}}">
+{% endblock %}
+</head>
+
+
+<body id="top">
+    {% block content %}
+    <!-- Preloader -->
+    <div class="preloader">
+        <div class="waves">
+            <div class="circle-1"></div>
+            <div class="circle-2"></div>
+
         </div>
-        <div id="navbar" class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Home</a></li>
-            <li><a href="{{ url_for('login') }}">Login</a></li>
-            <input type="button" class="btn btn-primary" value="Input Button" onclick="location.href = '{{ url_for('signup') }}';">
-            <!--<li><a href="{{ url_for('signup') }}">Sign Up</a></li> -->
-          </ul>
-        </div><!--/.nav-collapse -->
-      </div>
+    </div>
+    <!-- Preloader end-->
+    <!-- Color Switcher -->
+
+    <!-- End Color Switcher-->
+    <!-- Navigation panel-->
+    <nav id="navigation" class="navbar no-scrolled">
+        <div class="container">
+            <div class="navbar-header">
+                <!-- Burger menu button -->
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                        <span class="burger-menu">
+                            <span class="burger"></span>
+                        </span>
+                    </button>
+                <!-- Burger menu button end-->
+                <!-- Header logo -->
+                <a class="navbar-brand">
+                    <h3><img src="{{ url_for('static', filename='img/logo.png') }}"></h3>
+                </a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <!-- Navigation links -->
+                    <li class="active"><a href="#top">Home</a></li>
+                    <li><a href="#start">Updates</a></li>
+                    <li><a href="#team">Our Team</a></li>
+                    <!-- Navigation links end-->
+                </ul>
+            </div>
+        </div>
     </nav>
+    <!-- Navigation panel end-->
+    <!-- Header -->
+    <header id="header-1">
+        <div class="header-masc">
+            <!-- Background animation -->
+            <div class="bubbles">
+                <div class="bubble x1"></div>
+                <div class="bubble x2"></div>
+                <div class="bubble x3"></div>
+                <div class="bubble x4"></div>
+                <div class="bubble x5"></div>
+                <div class="bubble x6"></div>
+                <div class="bubble x7"></div>
+                <div class="bubble x8"></div>
+                <div class="bubble x9"></div>
+                <div class="bubble x10"></div>
+                <div class="bubble x11"></div>
+                <div class="bubble x12"></div>
+                <div class="bubble x13"></div>
+                <div class="bubble x14"></div>
+                <div class="bubble x15"></div>
+                <div class="bubble x16"></div>
+            </div>
+            <!-- Background animation end-->
+            <!-- Social icons -->
 
-    <div class="container">
+            <!-- Social icons end -->
+            <div class="container header-container">
+                <div class="row">
+                    <div class="col-md-8 col-sm-12 main-title wow fadeInUp" data-wow-duration="1.9s">
+                        <div align="center">
+                            <!-- Main header title -->
+                            <h1 class="white">Welcome to the Best Chat Application by <b>Alias Technologies</b></h1>
+                            <!-- Main header suptitle -->
+                            <h3 class="white"><i>It`s very <span class="txt-rotate" data-period="2000" data-rotate='[ "simple", "fast", "easy!" ]'></span></i></h3>
+                            <br>
+                            <!-- Appstore button -->
+                            <a href="{{ url_for('login') }}" class="btn dwnld-btn appstore"><i class="fa fa-child" aria-hidden="true"></i>&nbsp; Login</a>
+                            <!-- Playmarket button -->
+                            <a href="{{ url_for('signup') }}" class="btn dwnld-btn playmarket"><i class="fa fa-drivers-license-o" aria-hidden="true"></i>&nbsp; Register</a>
+                        </div>
+                    </div>
 
-      <div class="starter-template">
-        <h1>Bootstrap starter template</h1>
-        <p class="lead">Use this document as a way to quickly start any new project.<br> All you get is this text and a mostly barebones HTML document.</p>
-      </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- Header end -->
+    <!-- Start section -->
+    <section id="start">
 
-    </div><!-- /.container -->
-{% endblock %}
+    </section>
+    <!-- Start section end-->
+    <!-- About section -->
+    <section id="about">
+        <div class="padding-masc">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12 col-md-6 col-md-push-6 about-text">
+                        <div>
+                            <!-- Title -->
+                            <h3><b>Updates</b> Alias Chat App</h3>
+
+                            <p class="section-description">Coming Soon!</p>
+                            <br>
+                            <p>Sneak peak on some features of our app.</p>
+                            <br>
+                            <ul class="text-list">
+                                <li><i class="fa fa-check"></i> User-friendly Design</li>
+                                <li><i class="fa fa-check"></i> Multi-Platform</li>
+                                <li><i class="fa fa-check"></i> Security</li>
+                            </ul>
+
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6 col-md-pull-6 text-center">
+                        <div class="ilustration">
+
+                            <!-- Front phone -->
+                            <div class="back-phone wow slideInUp" data-wow-duration="1.3s" data-wow-delay=".2s">
+
+                                <div class="iphone">
+
+                                    <i></i>
+                                    <b></b>
+                                    <!-- Screenshot -->
+                                    <img src="{{ url_for('static', filename='img/Screenshot.jpg') }}">
+
+                                    <div class="bottom-panel-android">
+                                        <ul>
+                                            <li><span class="fa fa-bars" aria-hidden="true"></span></li>
+                                            <li><span class="fa fa-square-o" aria-hidden="true"></span></li>
+                                            <li><span class="fa fa-chevron-left" aria-hidden="true"></span></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Front phone end -->
+                            <!-- Back phone -->
+
+                            <!-- Back phone end -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- About section end-->
+
+    <!-- Video section end -->
+
+    <!-- Team section -->
+    <section id="team">
+
+            <div class="masc">
+            <!-- Background animation -->
+            <div class="bubbles">
+                <div class="bubble x1"></div>
+                <div class="bubble x2"></div>
+                <div class="bubble x3"></div>
+                <div class="bubble x4"></div>
+                <div class="bubble x5"></div>
+                <div class="bubble x6"></div>
+                <div class="bubble x7"></div>
+                <div class="bubble x8"></div>
+                <div class="bubble x9"></div>
+                <div class="bubble x10"></div>
+                <div class="bubble x11"></div>
+                <div class="bubble x12"></div>
+                <div class="bubble x13"></div>
+                <div class="bubble x14"></div>
+                <div class="bubble x15"></div>
+                <div class="bubble x16"></div>
+            </div>
+            <div class="container text-center">
+                <!--Title-->
+                <h3>Our <b>Team</b></h3>
+                <!-- Description -->
+
+                <div class="row">
+                    <!-- Team member 1 -->
+                    <div class="col-xs-12 col-sm-6 col-md-3">
+                        <div class="team-item">
+                            <img src="{{ url_for('static', filename='img/ali.png') }}" alt="Team member">
+
+                        </div>
+                        <div class="name mb30">
+                            <!-- Name -->
+                            <h4>Ali <br class="hiden">Muzaffar</h4>
+                            <!-- Position -->
+                            <p>Full Stack Developer</p>
+                        </div>
+                    </div>
+                    <!-- Team member 1 end -->
+                    <!-- Team member 2 -->
+                    <div class="col-xs-12 col-sm-6 col-md-3">
+                        <div class="team-item">
+                            <img src="{{ url_for('static', filename='img/waqas.png') }}" alt="Team member">
+
+                        </div>
+                        <div class="name mb30">
+                            <!-- Name -->
+                            <h4>Syed <br class="hiden">Muhammad <br class="hiden">Waqas</h4>
+                            <!-- Position -->
+                            <p>Full Stack Developer</p>
+                        </div>
+                    </div>
+                    <!-- Team member 2 end -->
+                    <!-- Team member 3 -->
+                    <div class="col-xs-12 col-sm-6 col-md-3">
+                        <div class="team-item">
+                            <img src="{{ url_for('static', filename='img/jason.png') }}" alt="Team member">
+                        </div>
+                        <div class="name mb30">
+                            <!-- Name -->
+                            <h4>Jason <br class="hiden">Shawn <br class="hiden">D'Souza</h4>
+                            <!-- Position -->
+                            <p>Technical Writer</p>
+                        </div>
+                    </div>
+                    <!-- Team member 3 end -->
+                    <!-- Team member 4 -->
+                    <div class="col-xs-12 col-sm-6 col-md-3">
+                        <div class="team-item">
+                           <img src="{{ url_for('static', filename='img/ej.png') }}" alt="Team member">
+                        </div>
+                        <div class="name mb30">
+                            <!-- Name -->
+                            <h4>Efren <br class="hiden">Joseph</h4>
+                            <!-- Position -->
+                            <p>Project Planner</p>
+                        </div>
+                    </div>
+                    <!-- Team member 4 end -->
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Team section end -->
+    <!-- Stats section -->
+
+    <!-- Stats section end -->
+
+    <!-- Latest posts section end -->
+    <!-- Footer section -->
+    <footer id="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 footer-logo">
+                    <!-- Footer logo -->
+                    <a class="footer-brand" href="#">
+                        <p><img src="{{ url_for('static', filename='img/logo.png') }}"> Alias Technologies</p>
+                    </a>
+                </div>
+                <div class="col-md-4 footer-social">
+                    <!-- Footer social icons -->
+                    <div>
+                        <a href="#" target="_blank"><i class="fa fa-facebook-square" aria-hidden="true"></i></a>
+                        <a href="#" target="_blank"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+                        <a href="#" target="_blank"><i class="fa fa-twitter-square" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-4 copyright">
+                    <!-- Footer copyright -->
+                    <p>Copyright © 2018 Alias Technologies all right reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- Footer section end-->
+    {% endblock %}
+
+</body>
+
+
+    {% block scripts %}
+    {{super()}}
+        <!-- jQuery -->
+    <script src="../../../../ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="{{url_for('.static', filename='js/bootstrap.min.js')}}"></script>
+    <!-- Owl Carousel -->
+    <script src="{{url_for('.static', filename='js/owl.carousel.min.js')}}"></script>
+    <!-- Wow -->
+    <script src="{{url_for('.static', filename='js/wow.min.js')}}"></script>
+    <!-- Lity -->
+    <script src="{{url_for('.static', filename='js/lity.min.js')}}"></script>
+    <!-- Smooth Scroll -->
+    <script src="{{url_for('.static', filename='js/smooth-scroll.js')}}"></script>
+    <!-- Main -->
+    <script src="{{url_for('.static', filename='js/main.js')}}"></script>
+    {% endblock %}
+
+</html>

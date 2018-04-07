@@ -1,8 +1,0 @@
-
-{% import "bootstrap/wtf.html" as wtf %}
-<form action = "/createGroup" method = "POST">
-					   {{ form.hidden_tag() }}
-        			   {{ wtf.form_field(form.roomName) }}
-  <button type="submit" class="btn btn-primary">Create Group</button>
-
-</form>
