@@ -17,14 +17,14 @@ from hashlib import md5
 app = Flask(__name__)
 socketio = SocketIO(app)
 app.config['SECRET_KEY'] = 'Thisissupposedtobesecret!'
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:pass123@localhost/netapps'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:pass123@localhost/netapps'
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://aliaschat_1612:XkQR1jlKThj36EpTSGzs@82aff7f1-1efb-4367-b5ed-21bb91efce66.aliaschat-1612.mysql.dbs.scalingo.com:31454/aliaschat_1612'
-SQLALCHEMY_DATABASE_URI = "mysql+pymysql://{username}:{password}@{hostname}/{databasename}".format(
-    username="sql12231151",
-    password="iNNxRJnZLM",
-    hostname="sql12.freemysqlhosting.net",
-    databasename="sql12231151",
-)
+#SQLALCHEMY_DATABASE_URI = "mysql+pymysql://{username}:{password}@{hostname}/{databasename}".format(
+#    username="sql12231151",
+#    password="iNNxRJnZLM",
+#    hostname="sql12.freemysqlhosting.net",
+#    databasename="sql12231151",
+#)
 #app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
 #app.config["SQLALCHEMY_POOL_RECYCLE"] = 299
 #app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -34,9 +34,9 @@ SQLALCHEMY_DATABASE_URI = "mysql+pymysql://{username}:{password}@{hostname}/{dat
 #    hostname="82aff7f1-1efb-4367-b5ed-21bb91efce66.aliaschat-1612.mysql.dbs.scalingo.com:31454",
 #    databasename="aliaschat_1612",
 #)
-app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
-app.config["SQLALCHEMY_POOL_RECYCLE"] = 299
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+#app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
+#app.config["SQLALCHEMY_POOL_RECYCLE"] = 299
+#app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 bootstrap = Bootstrap(app)
 db = SQLAlchemy(app)
 login_manager = LoginManager()
@@ -74,6 +74,7 @@ class User(UserMixin, db.Model):
 
     def avatar(self, size):
         digest = md5(self.email.lower().encode('utf-8')).hexdigest()
+        print(digest)
         return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(digest, size)
 
     #'https://www.gravatar.com/avatar/97d6961ceb3d48624c4ea08ef2733d85'
@@ -119,7 +120,7 @@ class RegisterForm(FlaskForm):
     firstName = StringField('First Name', validators=[InputRequired(), Length(min=3, max=15)])
     lastName = StringField('Last Name', validators=[InputRequired(), Length(min=2, max=15)])
     email = StringField('Email', validators=[InputRequired(), Email(message='Invalid email'), Length(max=50)])
-    gender = SelectField('Gender',choices=[('m',"Male"),('f',"Female")], validators=[InputRequired()])
+
     username = StringField('Username', validators=[InputRequired(), Length(min=4, max=15)])
     password = PasswordField('Password', validators=[InputRequired(), Length(min=8, max=80)])
 

@@ -33,7 +33,7 @@ Register on Alias Chat
 					<div class="account-box">
 						<div class="account-wrapper">
 							<div class="account-logo">
-								<a href="index.html"><img src="{{ url_for('static', filename='img/logo.png') }}" width="150"></a>
+								<a href="index.html"><img src="{{ url_for('static', filename='img/logo.png') }}" width="150" alt=""></a>
 							</div>
 							<form action="/signup" method="post">
 								<div class="form-group">
@@ -41,7 +41,6 @@ Register on Alias Chat
                                           {{ wtf.form_field(form.username) }}
     {{ wtf.form_field(form.firstName) }}
     {{ wtf.form_field(form.lastName) }}
-      {{ wtf.form_field(form.gender) }}
                             <label>Date of Birth</label><br><input id="dob" name= "dob" type="date" required>
                                     <br><br>
 

@@ -1,4 +1,4 @@
-
+	<ul class="media-list media-list-linked chat-user-list">
 {% for group in groups %}
                                        <li class="media">
 											<a href="#" class="media-link" onClick="addGroup('{{group.roomID}}')">
@@ -11,7 +11,7 @@
 										</li>
                                         {% endfor %}
 
-
+</ul>
 <script>
 
 function addGroup(id){

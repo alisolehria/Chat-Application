@@ -58,6 +58,8 @@
 
 
 							<li class="menu-title">Friend Chats <a href="#" data-toggle="modal" data-target="#add_chat_user" onClick="addFriends()"><i class="fa fa-plus"></i></a></li>
+
+						</ul>
 							<div id="friendList">
 
 
@@ -83,7 +85,6 @@
 
 
 
-						</ul>
 					</div>
                 </div>
             </div>
@@ -127,8 +128,9 @@
 							</form>
                                 <h3 class="modal-title">Join Group</h3>
                                     <ul class="media-list media-list-linked chat-user-list">
+                                        	</ul>
                                               <div id="groupList"></div>
-									</ul>
+
 							</div>
 
 						</div>
@@ -152,8 +154,12 @@
 									<h2>Users:</h2>
                                     <p>Press on the user to add</p>
 									<ul class="media-list media-list-linked chat-user-list">
-                                        <div id="usersList"></div>
-									</ul>
+                                        </ul>
+                                        <div id="usersList">
+
+
+                                        </div>
+
 								</div>
 
 							</div>
@@ -266,7 +272,7 @@ var finterval = setInterval(function()
 				console.log(error);
 			}
 		});
-    }, 10000);//time in milliseconds
+    }, 1000);//time in milliseconds
 
         function openGroup(id){
             $.ajax({
