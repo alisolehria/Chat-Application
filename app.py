@@ -156,14 +156,10 @@ def signup():
         date = request.form["dob"]
         dob = datetime.datetime.strptime(date, '%Y-%m-%d')
         dob = dob.date()
-        gender = form.gender.data
-        if gender == "m":
-            gender = False
-        else:
-            gender = True
+
 
         joinDate = datetime.datetime.now()
-        new_user = User(username=form.username.data, email=form.email.data, password=hashed_password,firstName=form.firstName.data,lastName=form.lastName.data,gender=gender,DOB=dob,joinDate = joinDate)
+        new_user = User(username=form.username.data, email=form.email.data, password=hashed_password,firstName=form.firstName.data,lastName=form.lastName.data,DOB=dob,joinDate = joinDate)
         db.session.add(new_user)
         db.session.commit()
 
