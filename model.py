@@ -4,10 +4,10 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 
 SQLALCHEMY_DATABASE_URI = "mysql+mysqlconnector://{username}:{password}@{hostname}/{databasename}".format(
-    username="aliascha_root",
-    password="Courseworkdb18",
-    hostname="aliaschat.tryfcomet.com",
-    databasename="aliascha_netapps",
+    username="sql12233470",
+    password="BHd4rq7q6G",
+    hostname="sql12.freemysqlhosting.net",
+    databasename="sql12233470",
 )
 app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
 app.config["SQLALCHEMY_POOL_RECYCLE"] = 299
